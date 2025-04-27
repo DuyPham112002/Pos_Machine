@@ -1,0 +1,498 @@
+﻿@using Client_ViewModel.Order
+@model CreateOrderViewModel
+
+<style>
+    .txt-infor {
+        text-align: center;
+    }
+
+        .txt-infor span {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+    .txt-title {
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        color: #131e22;
+        font-weight: 400;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+    }
+
+    .txt-attribute {
+        color: #777777;
+    }
+
+    .txt-font {
+        font-size: 14px;
+        font-family: 'Inter', sans-serif;
+        color: #131e22;
+        font-weight: 400;
+    }
+
+    .datatable-title {
+        white-space: nowrap;
+    }
+
+    .center {
+        width: 150px;
+    }
+
+    .customtooltip {
+        position: relative;
+        cursor: pointer;
+    }
+
+    .customtooltip-text {
+        visibility: hidden;
+        position: absolute;
+        box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+        padding: 0px 4px 2px 4px;
+        border-radius: 5px;
+        background-color: #FFFFFF;
+        z-index: 1;
+        top: -20;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+
+
+    .customtooltip:hover .customtooltip-text {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .customtooltip-text div {
+        padding: 5px;
+        width: 100px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .customtooltip-text button {
+        white-space: nowrap;
+        width: 100%;
+        margin: 2.5px 0;
+    }
+
+    .card {
+        padding: 4%;
+        box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+        border: none;
+    }
+
+    .card-image {
+        width: 100%;
+        text-align: center;
+    }
+
+    .img-product {
+        width: 130px;
+        height: 93px;
+        border-radius: 4px;
+    }
+</style>
+<div class="main-container">
+    <div style="margin-top: 15px;">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Hóa Đơn</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Tạo Mới
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-right">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pd-20 card-box mb-30">
+                <div class="clearfix">
+                    <p class="mb-30" style="margin: 0;">Ngày Tạo: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-5 col-md-6 col-sm-12" style="padding: 15px;">
+                        <section class="personal-info">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Danh Mục :</label>
+                                        <select class="gender custom-select form-control" id="categorySelect">
+                                            @{
+                                                if (Model.Categories != null && Model.Categories.Count() > 0)
+                                                {
+                                                    foreach (var item in Model.Categories)
+                                                    {
+                                                            <option value="@item.Id">@item.Name</option>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                        <option value="" data-display="Select" style="pointer-events: none;">Chọn Danh Mục</option>
+                                                }
+                                            }
+                                        </select>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Loại Sản Phẩm :</label>
+                                        <select class="gender custom-select form-control" id="subCategorySelect">
+                                            <option value="" data-display="Select" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                        </select>
+                                        <span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div>
+                                        <div class="form-group mb-0" style="display:flex;">
+                                            <div style="width: 100%;">
+                                                <input type="text" class="form-control search-input" id="search-product" placeholder="Tìm Kiếm Tên Sản Phẩm">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 10px;max-height: 550px; overflow: auto;" id="tbd-product">
+                                <div class="col-lg-12 col-md-12 col-sm-12" style="padding: 7px;">
+                                    <div class="card" style="padding: 4%;">
+                                        <b>Chọn danh mục và loại sản phẩm để tìm sản phẩm</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-lg-7 col-md-6 col-sm-12" style="padding: 15px 0 15px 30px;border-left: 1px solid #ddd8d8;">
+                        <section class="personal-info" style="max-height: 700px;">
+                            <div class="row" style="width: 100%; height: 100%; overflow: auto;">
+                                <div class="col-12">
+                                    <table class="table table-striped" style="width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                <th class="datatable-title">Sản Phẩm</th>
+                                                <th class="datatable-title">Giá Tiền</th>
+                                                <th class="datatable-title">Số Lượng</th>
+                                                <th class="datatable-title">Tổng</th>
+                                                <th class="datatable-title"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cart-product">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="row">
+                    <div class="col-lg-5 col-md-6 col-sm-12">
+                        <div style="display: flex; justify-content: space-between; align-items: center;padding-top: 10px;">
+                            <div><b>Số lượng sản phẩm:</b> <span id="bill-quantity">0</span> SP</div>
+                            <div><b>Tổng tiền:</b> <span id="bill-total">0 VNĐ</span></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-7 col-md-6 col-sm-12">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="width: 40%;">
+                                <div class="form-group mb-0">
+                                    <div style="width: 100%;padding-right: 10px;">
+                                        <input type="text" class="form-control search-input" id="bill-note" placeholder="Ghi chú hóa đơn">
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" id="create-btn" class="btn btn-primary" onclick="createNew()">Tạo Hóa Đơn</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="attributeModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Phân Loại Sản Phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="th-title" scope="col">Phân Loại</th>
+                                <th class="th-title" scope="col">Giá Tiền (VNĐ)</th>
+                                <th class="th-title" scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb-attribute">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Ghi Chú Hóa Đơn</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="area-note" rows="2" class="form-control" maxlength="500" style="height: 90px;" placeholder="Ghi chú"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="save-note" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        var orders = [];
+        var products = [];
+        var total = 0;
+        var flag = false;
+        $(document).ready(function () {
+            $('#categorySelect').change(loadSubCategories);
+            $('#subCategorySelect').change(loadProducts);
+            $('#search-product').on('input', searchProduct);
+            $('#bill-note').focus(() => $('#noteModal').modal('show'));
+            $('#save-note').click(() => $('#bill-note').val($('#area-note').val()));
+            $('#noteModal').on('hidden.bs.modal', function (e) {
+                $('#save-note').click();
+            });
+            var categoryId = $('#categorySelect option[value!=""]').first().val();
+            if (categoryId != null && categoryId != "" && $('#categorySelect option').length >= 1) {
+                $('#categorySelect').val(categoryId);
+                loadSubCategories();
+                flag = true;
+            }
+        });
+
+        function loadSubCategories() {
+            var categoryId = $('#categorySelect').val();
+            if (categoryId) {
+                $.get('@Url.Action("GetSubCategories", "SubCategory")', { categoryId }, (data) => {
+                    if (data && data.length > 0) {
+                        var options = data.map(item => `<option value="${item.id}">${item.name}</option>`).join('');
+                         $('#subCategorySelect').html(`${options}`);
+                        if (flag) {
+                            $('#subCategorySelect').val(data[0].id);
+                            loadProducts();
+                        }
+                        $('#tbd-product').empty();
+                        flag = false;
+                    } else {
+                        $('#subCategorySelect').html('<option value="">Chọn loại sản phẩm</option>');
+                    }
+                });
+            }
+        }
+
+        function loadProducts() {
+            var subCategoryId = $('#subCategorySelect').val();
+            $('#tbd-product').empty();
+            if (subCategoryId) {
+                $.get('@Url.Action("GetProducts", "Product")', { subcategory: subCategoryId }, (data) => {
+                    products.push(...data);
+                    $('#tbd-product').html(data.map(item => renderProduct(item)).join(''));
+                    flag = true;
+                });
+            } else {
+                $('#tbd-product').html('<div class="col-lg-12 col-md-12 col-sm-12" style="padding: 7px;"> <div class="card" style="padding: 4%;"> <b>Chọn danh mục và loại sản phẩm để tìm sản phẩm</b> </div> </div>');
+            }
+        }
+
+        function createNew() {
+            var orderData = {
+                Order: { Total: total, Note: $('#area-note').val() },
+                OrderDetails: orders
+            };
+            $.ajax({
+                url: '@Url.Action("Create", "Order")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(orderData),
+                success: function (response) {
+                    response.error ? toastError(response.message) : window.location.href = `${'@Url.Action("Checkout", "Payment")'}/${response.orderId}?success=${response.message}`;
+                }
+            });
+        }
+
+        function getProduct(productId) {
+            if (productId) {
+                $.get('@Url.Action("GetProductById", "Product")', { productId }, function (data) {
+                    if (data?.attributes?.length) {
+                        data.attributes.sort((a, b) => a.price - b.price);
+                        $('#tb-attribute').html(data.attributes.map(item => `
+                                      <tr>
+                                          <td>${item.name}</td>
+                                          <td>${formatCurrency(item.price)}</td>
+                                          <td><button class="btn btn-primary" onclick="addProduct('${data.id}', '${item.id}', '${data.name} <br> <span>(${item.name})</span>', ${item.price})">Chọn</button></td>
+                                      </tr>`).join(''));
+                        $('#attributeModal').modal('show');
+                    }
+                }).fail((xhr, status, error) => console.error('AJAX Error:', status, error));
+            } else {
+                console.warn('Sản phẩm không hợp lệ.');
+            }
+        }
+
+        function renderProduct(item) {
+            var formattedAmount = formatCurrency(item.price);
+            var formattedName = item.images ? item.images.replace("Images/", "").trim() : '';
+            return `
+                            <div class="col-lg-3 col-md-4 col-sm-6 customtooltip" style="padding: 7px;"  title="${item.name}">
+                                 <div class="card">
+                                     <div class="card-image" onclick="${item.isRequiredAttribute === 1 ? `addProduct('${item.id}', '','${item.name}', ${item.price})` : `getProduct('${item.id}')`}">
+                                         <img class="img-product" src="/Order/document/${formattedName}" />
+                                     </div>
+                                     <div class="txt-infor"><span class="txt-font">${item.name}</span></div>
+                                 </div>
+                             </div>`;
+        }
+
+        function addProduct(productId, attributeId, name, price) {
+            if (orders.some(p => (p.ProductId === productId && attributeId === "") || (p.ProductId === productId && p.AttributeId === attributeId))) {
+                toastWarning('Sản phẩm đã được thêm vào hóa đơn');
+                return;
+            }
+
+            var newOrder = createOrder(productId, attributeId, 1, price);
+            orders.push(newOrder);
+            $('#cart-product').append(renderCartItem(newOrder, name));
+            calculateTotal();
+        }
+
+        function renderCartItem(order, name) {
+            return `   <tr id="${order.ProductId}${order.AttributeId}">
+                                       <td><div class="txt-title">${name}</div></td>
+                                       <td><div class="txt-title">${formatCurrency(order.Price)}</div></td>
+                                       <td>
+                                           <div class="center">
+                                               <div class="input-group">
+                                                   <span class="input-group-btn">
+                                                       <button class="btn btn-default btn-number" onclick="updateQuantity('${order.ProductId}${order.AttributeId}', false)"><i class="fa-solid fa-minus"></i></button>
+                                                   </span>
+                                                   <input id="quantity" type="text" class="form-control input-number" value="1" min="1" max="1000" readonly>
+                                                   <span class="input-group-btn">
+                                                       <button class="btn btn-default btn-number" onclick="updateQuantity('${order.ProductId}${order.AttributeId}', true)"><i class="fa-solid fa-plus"></i></button>
+                                                   </span>
+                                               </div>
+                                           </div>
+                                       </td>
+                                       <td><div class="txt-title" id="subtotal">${formatCurrency(order.SubTotal)}</div></td>
+                                       <td><button class="btn btn-danger" onclick="removeProduct('${order.ProductId}${order.AttributeId}')"><i class="bi bi-x-octagon"></i></button></td>
+                                   </tr>`;
+        }
+
+        function formatCurrency(value) {
+            return parseInt(value).toLocaleString('vi-VN') + ' VNĐ';
+        }
+
+        function updateQuantity(orderId, increment) {
+            var order = orders.find(p => `${p.ProductId}${p.AttributeId}` === orderId);
+            if (order) {
+                order.Quantity = increment ? order.Quantity + 1 : Math.max(order.Quantity - 1, 1);
+                order.calculateSubTotal();
+                updateQuantityDisplay(orderId, order.Quantity, order.SubTotal);
+                calculateTotal();
+            }
+        }
+
+        function updateQuantityDisplay(orderId, quantity, subtotal) {
+            $(`#${orderId} #quantity`).val(quantity);
+            $(`#${orderId} #subtotal`).text(formatCurrency(subtotal));
+        }
+
+        function removeProduct(orderId) {
+            var orderIndex = orders.findIndex(p => `${p.ProductId}${p.AttributeId}` === orderId);
+            if (orderIndex !== -1) {
+                orders.splice(orderIndex, 1);
+                $(`#${orderId}`).remove();
+                calculateTotal();
+            }
+        }
+
+        function calculateTotal() {
+            total = orders.reduce((acc, order) => acc + order.SubTotal, 0);
+            var quantity = orders.reduce((acc, order) => acc + order.Quantity, 0);
+            $('#bill-total').text(formatCurrency(total));
+            $('#bill-quantity').text(quantity);
+        }
+
+        function searchProduct() {
+            var pattern = $('#search-product').val().toLowerCase();
+            $('#tbd-product').empty();
+            var data = products.filter(item => !pattern || item.name.toLowerCase().includes(pattern));
+            $('#tbd-product').html(data.map(item => renderProduct(item)).join(''));
+        }
+
+        function createOrder(productId, attributeId, quantity, price) {
+            return {
+                ProductId: productId,
+                AttributeId: attributeId,
+                Quantity: quantity,
+                Price: price,
+                SubTotal: quantity * price,
+                calculateSubTotal: function () {
+                    this.SubTotal = this.Quantity * this.Price;
+                }
+            };
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

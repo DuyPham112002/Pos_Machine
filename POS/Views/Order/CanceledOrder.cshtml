@@ -1,0 +1,137 @@
+﻿@using Client_ViewModel.Order
+@model List<OrderViewModel>
+
+<style>
+    .dropdown-item i {
+        margin-right: 10px;
+    }
+
+    table.dataTable thead:nth-of-type(2) {
+        display: none; /* Ẩn toàn bộ <thead> cuối cùng */
+    }
+
+    .modal-body {
+        overflow: auto !important;
+    }
+</style>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header background-blue">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Hóa Đơn</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Danh Sách
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Simple Datatable start -->
+            <div class="card-box mb-30">
+                <div class="pd-20">
+                    <h4 class="h4">Danh Sách Hóa Đơn Đã Hủy</h4>
+                </div>
+                <div class="pb-20">
+                    <table class="table data-table-export hover display nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Mã Đơn</th>
+                                <th>Số Lượng</th>
+                                <th>Tổng</th>
+                                <th>Trạng Thái</th>
+                                <th>Ngày Tạo</th>
+                                <th class="datatable-nosort">Tùy Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0)
+                            {
+                                foreach (var order in Model)
+                                {
+                                    <tr>
+                                        <td data-toggle="tooltip" data-placement="top" title="@order.Code">
+                                            <div class="txt-title">
+                                                @order.Code
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@order.Quantity">
+                                            <div class="txt-title">
+                                                @order.Quantity SP
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@order.Total">
+                                            <div class="txt-title">
+                                                @order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@order.StatusName">
+                                            <div class="txt-title" style="@(order.Status == 1 ? "color: orange;" : order.Status == 2 ? "color: green;" : "color: red")">
+                                                @order.StatusName
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="txt-title" title="@order.CreatedOn.ToString("dd/MM/yyyy - HH:mm")">
+                                                @order.CreatedOn.ToString("dd/MM/yyyy - HH:mm")
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0;">
+                                                    Tùy Chọn
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="@($"/order/Detail/{order.Id}")">
+                                                        <i class="icon-copy bi bi-info-circle"></i> Chi Tiết
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="8">Không Có Hóa Đơn Nào Được Tìm Thấy</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Simple Datatable End -->
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

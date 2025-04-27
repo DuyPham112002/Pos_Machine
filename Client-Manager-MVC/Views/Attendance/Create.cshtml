@@ -1,0 +1,111 @@
+﻿@using Client_ViewModel.AttendVIewModel
+
+@model AttendanceViewModel
+
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header background-blue ">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class=" light-text">
+                            <h4 class="light-text">Quản Lý Chấm Công</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item ">
+                                    <a class="light-text" href="/">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active light-text" aria-current="page">
+                                    Tạo Chấm Công
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <div class="pd-20 card-box mb-30">
+                <div class="clearfix">
+                    <div class="pull-left">
+                        <h4 class="dark-text h4">Tạo Chấm Công Mới</h4>
+                        <p class="mb-30">Tạo chấm công thống kê cho nhân viên</p>
+                    </div>
+
+                </div>
+                <form asp-action="CreateView" asp-controller="Attendance" method="post">
+                    <div class="form-group row">
+                        <label class="col-sm-12 col-md-2 col-form-label">Ngày bắt đầu</label>
+                        <div class="col-sm-12 col-md-12">
+
+                            <input asp-for="DateStart"
+                                   class="form-control"
+                                   type="date"
+                                   required />
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <label class="col-sm-12 col-md-2 col-form-label">Ngày kết thúc</label>
+                        <div class="col-sm-12 col-md-12">
+
+                            <input class="form-control"
+                                   type="date"
+                                   required
+                                   asp-for="DateEnd" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-2"></div>
+                        <button type="submit" class="btn btn-success col-lg-2 col-sm-12 offset-lg-2">Tạo</button>
+                        <a href="/Home/Index" class="btn btn-primary col-lg-2 col-sm-12 offset-lg-1">Trở về</a>
+                        <div class="col-2"></div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+
+@section Scripts {
+    <script>
+        function activatePress(accId, name) {
+            document.getElementById("activeAdmin").innerHTML = name;
+            document.getElementById("activateAccId").value = accId;
+            $('#activateModal').modal('show');
+        }
+
+        function deletePress(accId) {
+            document.getElementById("deleteAccId").value = accId;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

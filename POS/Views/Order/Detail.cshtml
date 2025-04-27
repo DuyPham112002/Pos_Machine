@@ -1,0 +1,447 @@
+﻿@using Client_ViewModel.Order
+@using Microsoft.AspNetCore.Html
+@model DetailOrderViewModel
+
+<style>
+    .food_img_price_des {
+        display: flex;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+
+        .food_img_price_des .cart_food_img {
+            width: 85px;
+            height: 51px;
+            overflow: hidden;
+            border: 1px solid #d4d4d491;
+            padding: 4px;
+        }
+
+            .food_img_price_des .cart_food_img img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .food_img_price_des .food_dec_flex {
+            margin-left: 1rem;
+        }
+
+            .food_img_price_des .food_dec_flex p {
+                margin: 0;
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+                .food_img_price_des .food_dec_flex p:last-child {
+                    color: red;
+                }
+
+    .yourCart_div {
+        border: 1px solid #d4d4d491;
+        padding: 19px;
+    }
+
+
+    .cart_total .price_total {
+        display: flex;
+        margin-bottom: 5px;
+        justify-content: space-between;
+    }
+
+        .cart_total .price_total p {
+            color: #737373;
+            margin: 0;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+    .total_btn_cart {
+        width: 100%;
+        background: #ac1734 !important;
+        border-color: #ac1734 !important;
+        padding: 9px 19px !important;
+        display: flex;
+        justify-content: space-between;
+        color: #fff;
+        font-weight: 500;
+        border-style: unset;
+        font-family: "Montserrat", sans-serif;
+    }
+
+    .track {
+        position: relative;
+        background-color: #ddd;
+        height: 7px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        margin-bottom: 60px;
+        margin-top: 50px
+    }
+
+        .track .step {
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            width: 25%;
+            margin-top: -18px;
+            text-align: center;
+            position: relative
+        }
+
+            .track .step.active:before {
+                background: #1ca5d9
+            }
+
+            .track .step::before {
+                height: 7px;
+                position: absolute;
+                content: "";
+                width: 100%;
+                left: 0;
+                top: 18px
+            }
+
+            .track .step.active .icon {
+                padding-top: 10px;
+                background: #1ca5d9;
+                color: #fff
+            }
+
+        .track .icon {
+            padding-top: 10px;
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            position: relative;
+            border-radius: 100%;
+            background: #ddd
+        }
+
+        .track .step.active .text {
+            font-weight: 500;
+            color: #000
+        }
+
+        .track .text {
+            font-weight: 500;
+            color: #000;
+            display: block;
+            margin-top: 7px
+        }
+
+    .itemside {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        width: 100%
+    }
+
+        .itemside .aside {
+            position: relative;
+            -ms-flex-negative: 0;
+            flex-shrink: 0
+        }
+
+    .img-sm {
+        width: 80px;
+        height: 80px;
+        padding: 7px
+    }
+
+    ul.row,
+    ul.row-sm {
+        list-style: none;
+        padding: 0
+    }
+
+    .itemside .info {
+        padding-left: 15px;
+        padding-right: 7px
+    }
+
+    .itemside .title {
+        display: block;
+        margin-bottom: 5px;
+        color: #212529
+    }
+
+    .overlow-div {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
+    }
+</style>
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Hóa Đơn</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="Order/Index">Danh Sách</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Chi Tiết
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-right">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="yourCart_div d-20 card-box mb-30">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <article class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <h6 class="col-lg-6 col-sm-6 col-md-6 offset-sm-0 ">Mã đơn hàng: @Model.Order.Code</h6>
+                                     
+                                            <h6 class="col-lg-6 col-sm-6 col-md-6 offset-sm-0 text-right">Nhân viên: @Model.Order.Username</h6>
+
+                                        </div>
+                                      
+                                        <br />
+                                        <article class="card">
+                                            <div class="card-body row">
+                                                <div class="col-3 overlow-div"> <strong>Số Lượng:</strong><br /> @Model.Order.Quantity SP</div>
+                                                <div class="col-3 overlow-div"> <strong>Tổng:</strong><br /> @Model.Order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ </div>
+                                                <div class="col-3 overlow-div"> <strong>Trạng thái:</strong><br /> <span style="@(Model.Order.Status == 1 ? "color: orange;" : Model.Order.Status == 2 ? "color: green;" : "color: red")">@Model.Order.StatusName</span> </div>
+                                                <div class="col-3 overlow-div"> <strong>Ngày Tạo:</strong><br /> @Model.Order.CreatedOn.ToString("dd/MM/yyyy") </div>
+                                            </div>
+                                        </article>
+                                        <div class="track">
+                                            <div class="@(Model.Order.Status == 1 ? "step active" : Model.Order.Status == 2 ? "step active" : "step")">
+                                                <span class="icon"> <i class="fa-solid fa-folder-plus"></i></span> <span class="text">Tạo Đơn</span>
+                                            </div>
+                                            <div class="@(Model.Order.Status == 2 ? "step active" : "step")">
+                                                <span class="icon"> <i class="fa-solid fa-money-check-dollar"></i> </span> <span class="text">Checkout</span>
+                                            </div>
+                                            <div class="@(Model.Order.Status == 2 ? "step active" : "step")">
+                                                <span class="icon"> <i class="fa-solid fa-clipboard-check"></i> </span> <span class="text">Thanh Toán</span>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="personal-info" style="max-height: 550px;">
+                                    <div class="row" style="width: 100%; height: 100%; overflow: auto;">
+                                        <div class="col-12">
+                                            <table class="table table-striped" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="datatable-title">Sản Phẩm</th>
+                                                        <th class="datatable-title">Giá Tiền</th>
+                                                        <th class="datatable-title">Số Lượng</th>
+                                                        <th class="datatable-title">Tổng</th>
+                                                        <th class="datatable-title">Ngày Tạo</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        if (Model.Orders != null && Model.Orders.Count() > 0)
+                                                        {
+                                                            foreach (var item in Model.Orders)
+                                                            {
+                                                                HtmlString name = new HtmlString(item.ProductName);
+                                                                <tr>
+                                                                    <td data-toggle="tooltip" data-placement="top">
+                                                                        <div class="food_img_price_des">
+                                                                            <div class="cart_food_img">
+                                                                                <img src="@($"/Order/document/{item.ImageUrl.Replace("Images/","")}")">
+                                                                            </div>
+                                                                            <div class="food_dec_flex">
+                                                                                <div class="txt-title">
+                                                                                    @name
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.Price">
+                                                                        <div class="txt-title">
+                                                                            @item.Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.Quantity">
+                                                                        <div class="txt-title">
+                                                                            @("x" + item.Quantity)
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.SubTotal">
+                                                                        <div class="txt-title">
+                                                                            @item.SubTotal.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.CreatedOn.ToString("dd/MM/yyyy - HH:mm")">
+                                                                        <div class="txt-title">
+                                                                            @item.CreatedOn.ToString("dd/MM/yyyy - HH:mm")
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 0;" />
+                        <div class="row">
+                            @if (Model.Order.Status == 3)
+                            {
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Ghi Chú :</label>
+                                        <textarea rows="2" class="form-control" maxlength="500" style="height: 90px;pointer-events: none;">@(!string.IsNullOrEmpty(Model.Order.Note) ? Model.Order.Note : "Không có ghi chú")</textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <div class="form-group">
+                                        <label>Lý Do Hủy :</label>
+                                        <textarea rows="2" class="form-control" maxlength="500" style="height: 90px;pointer-events: none;">@(!string.IsNullOrEmpty(Model.Order.ReasonCancel) ? Model.Order.ReasonCancel : "")</textarea>
+                                    </div>
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Ghi Chú :</label>
+                                        <textarea rows="2" class="form-control" maxlength="500" style="height: 90px;pointer-events: none;">@(!string.IsNullOrEmpty(Model.Order.Note) ? Model.Order.Note : "Không có ghi chú")</textarea>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                @if (Model.Order.Status == 1)
+                                {
+                                    <button type="button" class="btn btn-danger" onclick="deletePress('@Model.Order.Id','@Model.Order.Code')">
+                                        Hủy Đơn
+                                    </button>
+                                    <a href="@($"/Order/Edit/{Model.Order.Id}")" class="btn btn-primary">
+                                        Chỉnh Sửa
+                                    </a>
+                                }
+                            </div>
+                            <div>
+                                @if (Model.Order.Status == 1)
+                                {
+                                    <a href="@($"/Payment/Checkout/{Model.Order.Id}")" class="btn btn-success">
+                                        Thanh Toán
+                                    </a>
+                                }
+                                else
+                                {
+                                    if (Model.Order.Status == 2)
+                                    {
+                                        <a href="@($"/Order/Invoice/{Model.Order.Id}")" class="btn btn-danger">
+                                            In HĐ
+                                        </a>
+                                    }
+                                    <a href="/Order/Index" class="btn btn-success">
+                                        Trở Về
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận hủy đơn:  <span id="adminUnActive"></span></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-action="UpdateUnActived" asp-controller="Order" method="post" style="display:inline;">
+                    <input type="hidden" class="form-control" asp-for="@Model.Cancel.Id" value="@Model.Order.Id" />
+                    <div class="modal-body" style="padding-bottom: 0;">
+                        <div>
+                            <div class="form-group">
+                                <label>Lý do hủy đơn:</label>
+                                <textarea rows="2" class="form-control" asp-for="@Model.Cancel.Resaon" maxlength="500" style="height: 90px;" placeholder="Lý do hủy..."></textarea>
+                                <span asp-validation-for="@Model.Cancel.Resaon"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="padding-top: 0;">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-danger">Xác Nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        function deletePress(orderId, name) {
+            document.getElementById("adminUnActive").innerHTML = name;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        if (ViewBag.Error == "Vui lòng kiểm tra lại các thông tin đã nhập")
+        {
+            <script>
+                $(function () {
+                    $('#deleteModal').modal('show');
+                });
+            </script>
+        }
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

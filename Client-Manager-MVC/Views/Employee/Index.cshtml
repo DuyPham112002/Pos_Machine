@@ -1,0 +1,211 @@
+﻿@using Client_ViewModel.Employee
+@model List<EmployeeViewModel>
+
+<style>
+    .dropdown-item i {
+        margin-right: 10px;
+    }
+
+    .modal-body {
+        overflow: auto !important;
+    }
+</style>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header background-blue">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Nhân Viên</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Danh Sách
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Simple Datatable start -->
+            <div class="card-box mb-30">
+                <div class="pd-20">
+                    <h4 class="h4">Danh Sách Nhân Viên</h4>
+                </div>
+                <div class="pb-20">
+                    <table class="table data-table-export hover display nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th class="datatable-nosort">#</th>
+                                <th>Họ & Tên</th>
+                                <th>Email</th>
+                                <th>Số Điện Thoại</th>
+                                <th>Trạng Thái</th>
+                                <th class="datatable-nosort">Tùy Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model != null && Model.Count > 0)
+                            {
+                                foreach (var Employee in Model)
+                                {
+                                    <tr>
+                                        <td data-toggle="tooltip" data-placement="top">
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@Employee.Fullname">
+                                            <div class="txt-title">
+                                                @Employee.Fullname
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@Employee.Email">
+                                            <div class="txt-title">
+                                                @Employee.Email
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@Employee.Phone">
+                                            <div class="txt-title">
+                                                @Employee.Phone
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (Employee.IsActive)
+                                            {
+                                                <span class="badge badge-pill active-badge" style="padding: 0;font-size: 12px;">
+                                                    <i style="color:green" class="icon-copy bi bi-record-fill"></i> Hoạt Động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill deactivated-badge" style="padding: 0;font-size: 12px;">
+                                                    <i class="icon-copy bi bi-record"></i> Ngừng Hoạt Động
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0;">
+                                                    Tùy Chọn
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="/Employee/Detail/@Employee.AccId">
+                                                        <i class="icon-copy bi bi-info-circle"></i> Chi Tiết
+                                                    </a>
+                                                    @if (Employee.IsActive)
+                                                    {
+                                                        <button class="dropdown-item" onclick="deletePress('@Employee.AccId','@Employee.Fullname')">
+                                                            <i class="icon-copy bi bi-trash2"></i> Ngưng Hoạt Động
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="dropdown-item" onclick="activatePress('@Employee.AccId','@Employee.Fullname')">
+                                                            <i class="icon-copy bi bi-check-circle"></i> Hoạt Động
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="8">Không Có Nhân Viên Nào Được Tìm Thấy</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Activate Confirmation Modal -->
+    <div class="modal fade" id="activateModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập Nhật Trạng Thái</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Xác nhận: Nhân Viên <b id="activeAdmin"></b> hoạt động trở lại?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    <form asp-action="UpdateActive" asp-controller="Employee" method="post" style="display:inline;">
+                        <input type="hidden" name="accId" id="activateAccId" />
+                        <button type="submit" class="btn btn-success">Hoạt Động</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập Nhật Trạng Thái</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Xác nhận: Nhân Viên <b id="adminUnActive"></b> sẽ ngưng hoạt động ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    <form asp-action="UpdateActive" asp-controller="Employee" method="post" style="display:inline;">
+                        <input type="hidden" name="accId" id="deleteAccId" />
+                        <button type="submit" class="btn btn-danger">Ngưng Hoạt Động</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        function activatePress(accId, name) {
+            document.getElementById("activeAdmin").innerHTML = name;
+            document.getElementById("activateAccId").value = accId;
+            $('#activateModal').modal('show');
+        }
+
+        function deletePress(accId, name) {
+            document.getElementById("adminUnActive").innerHTML = name;
+            document.getElementById("deleteAccId").value = accId;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

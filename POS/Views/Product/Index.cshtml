@@ -1,0 +1,284 @@
+﻿@using Client_ViewModel.Product
+@model MainProductViewModel
+<style>
+    .d-flex {
+        display: flex;
+        align-items: center;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    .form-control {
+        flex-grow: 1;
+    }
+
+    button {
+        white-space: nowrap;
+    }
+</style>
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="title">
+                            <h4>Sản Phẩm</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Danh Sách
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <br />
+            @{
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-15">
+                        <div class="form-group">
+                            <select asp-for="CategoryId" class="gender custom-select form-control" id="categorySelect">    
+                                @{
+                                    if (Model.Categories != null && Model.Categories.Count() > 0)
+                                    {
+                                        foreach (var item in Model.Categories)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="" data-display="Select" style="pointer-events: none;">Chọn Danh Mục Sản Phẩm</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 col-sm-12 mb-15">
+                        <div class="form-group">
+                            <select asp-for="SubcategoryId" class="gender custom-select form-control" id="subCategorySelect">
+                                @{
+                                    if (Model.SubCategories != null && Model.SubCategories.Count() > 0 && !string.IsNullOrEmpty(Model.SubcategoryId))
+                                    {
+                                        <option value="" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                        foreach (var item in Model.SubCategories)
+                                        {
+                                            <option value="@item.Id">@item.Name</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="" data-display="Select" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-sm-12 mb-15">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <div class="flex-grow-1 me-2">
+                                <input type="text" id="nameSearch" placeholder="Tìm Kiếm Tên Sản Phẩm" class="form-control">
+                            </div>
+                            <div class="me-2">
+                                <button type="button" onclick="clearSearch()" style="margin: 0 10px;" class="btn btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                    Làm Mới
+                                </button>
+                            </div>
+                            <button type="button" onclick="searchProduct()" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                Tìm Kiếm
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="product-wrap">
+                    <div class="product-list">
+                        <ul class="row" id="productlist">
+                            @if (Model.Products != null && Model.Products.Count() > 0)
+                            {
+                                foreach (var item in Model.Products)
+                                {
+                                    <li class="col-lg-3 col-md-6 col-sm-12">
+                                        <a href="@($"/Product/Detail/{item.Id}")">
+                                            <div class="product-box">
+                                                <div class="producct-img">
+                                                    <img style="width: 500px; height: 310px;" src="@(!string.IsNullOrEmpty(item.Images) ? $"/Product/document/{item.Images.Replace("Images/","").Trim()}" : "vendors/images/new-loader.gif")" alt="" />
+                                                </div>
+                                                <div class="product-caption">
+                                                    <div class="flex-box" style="align-items: start !important;">
+                                                        <div>
+                                                            <h4>@item.Name</h4>
+                                                        </div>
+                                                        <div>
+                                                            @if (item.IsActive)
+                                                            {
+                                                                <span class="badge badge-pill active-badge" style="padding: 0;font-size: 12px;">
+                                                                    <i style="color:green" class="icon-copy bi bi-record-fill"></i> Hoạt Động
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="badge badge-pill deactivated-badge" style="padding: 0;font-size: 12px;">
+                                                                    <i class="icon-copy bi bi-record"></i> Ngừng Hoạt Động
+                                                                </span>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex-box">    
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li class="col-lg-12 col-md-12 col-sm-12">
+                                    <b>Không Có Sản Phẩm Nào Được Tìm Thấy</b>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>   
+            }
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        var products = [];
+        var flag = false;
+        $(document).ready(function () {
+            $('#categorySelect').change(loadSubCategories);
+            $('#subCategorySelect').change(loadProducts);
+            var categoryId = $('#categorySelect option[value!=""]').first().val();
+            if (categoryId != null && categoryId != "" && $('#categorySelect option').length >= 1) {
+                $('#categorySelect').val(categoryId);
+                loadSubCategories();
+                flag = true;
+            }
+        });
+
+        function loadSubCategories() {
+            var categoryId = $('#categorySelect').val();
+            if (categoryId) {
+                $.get('@Url.Action("GetSubCategories", "SubCategory")', { categoryId }, (data) => {
+                    if (data && data.length > 0) {
+                        var options = data.map(item => `<option value="${item.id}">${item.name}</option>`).join('');
+                        $('#subCategorySelect').html(`${options}`);
+                        if (flag) {
+                            $('#subCategorySelect').val(data[0].id);
+                            loadProducts();
+                        }
+                        $('#tbd-product').empty();
+                        flag = false;
+                    } else {
+                        $('#subCategorySelect').html('<option value="">Chọn loại sản phẩm</option>');
+                    }
+                });
+            }
+        }
+
+        function loadProducts() {
+            var subCategoryId = $('#subCategorySelect').val();
+            $('#tbd-product').empty();
+            if (subCategoryId) {
+                $.ajax({
+                    url: '@Url.Action("GetProducts", "Product")',
+                    type: 'GET',
+                    data: { subcategory: subCategoryId },
+                    success: function (data) {
+                        products = data;
+                        $('#productlist').empty();
+                        $.each(data, function (i, item) {
+                            $('#productlist').append(generateProductHtml(item));
+                        });
+                    }
+                });
+            } else {
+                $('#productlist').empty().append('<li class="col-lg-12 col-md-12 col-sm-12"> <b>Không Có Sản Phẩm Nào Được Tìm Thấy</b> </li>');
+            }
+        }
+
+        function searchProduct() {
+            var filter = [];
+            var text = $('#nameSearch').val();
+            if (text) {
+                filter = products.filter(p => p.name.toLowerCase().includes(text.toLowerCase()));
+            } else {
+                filter = products;
+            }
+            $('#productlist').empty();
+            for (var i = 0; i < filter.length; i++) { 
+                var item = filter[i]; 
+                $('#productlist').append(generateProductHtml(item));
+            }
+        }
+
+        function clearSearch(){
+            $('#nameSearch').val('');
+            searchProduct();
+        }
+
+        function generateProductHtml(item) {
+            return `
+                <li class="col-lg-3 col-md-6 col-sm-12">
+                    <a href="/Product/Detail/${item.id}">
+                        <div class="product-box">
+                            <div class="producct-img">
+                                <img style="width: 500px; height: 310px;" src="${item.images ? `/Product/document/${item.images.replace('Images/', '').trim()}` : 'vendors/images/new-loader.gif'}" alt="" />
+                            </div>
+                            <div class="product-caption">
+                                <div class="flex-box" style="align-items: start !important;">
+                                    <div>
+                                        <h4>${item.name}</h4>
+                                    </div>
+                                    <div>
+                                        ${item.isActive 
+                                            ? `<span class="badge badge-pill active-badge" style="padding: 0;font-size: 12px;">
+                                                    <i style="color:green" class="icon-copy bi bi-record-fill"></i> Hoạt Động
+                                               </span>`
+                                            : `<span class="badge badge-pill deactivated-badge" style="padding: 0;font-size: 12px;">
+                                                    <i class="icon-copy bi bi-record"></i> Ngừng Hoạt Động
+                                               </span>`}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            `;
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

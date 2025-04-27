@@ -1,0 +1,563 @@
+﻿@using Client_ViewModel.Product
+@model ProductDetailViewModel
+
+<style>
+    .slick-next.slick-arrow {
+        display: none !important;
+    }
+
+    .slick-prev.slick-arrow {
+        display: none !important;
+    }
+
+    .th-title {
+        margin-bottom: 10px;
+        font-weight: 500;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+</style>
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="title">
+                            <h4>Chi Tiết Sản Phẩm</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/Product/Index">Danh Sách</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Chi Tiết
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrap">
+                <div class="product-detail-wrap mb-30">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-12 col-sm-12">
+                            <div class="product-detail-desc pd-20 card-box height-100-p">
+                                <div class="product-slide">
+                                    <img style="width: 100%; height: 350px;" src="@(!string.IsNullOrEmpty(Model.ProductViewModel.Images) ? $"/Product/document/{Model.ProductViewModel.Images.Replace("Images/","").Trim()}" : "vendors/images/new-loader.gif")" alt="" />
+                                </div>
+                                <div class="profile-info">
+                                    <h5 class="mb-20 h5 text-blue">Thông Tin Hiện Tại</h5>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <ul>
+                                                <li>
+                                                    <span>Tên Sản Phẩm:</span>
+                                                    @Model.ProductViewModel.Name
+                                                </li>
+                                                <li>
+                                                    <span>Danh Mục:</span>
+                                                    @Model.ProductViewModel.CategoryName
+                                                </li>
+                                                <li>
+                                                    <span>Loại Sản Phẩm:</span>
+                                                    @Model.ProductViewModel.SubCategoryName
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <ul>
+                                                @if (Model.ProductViewModel.IsRequiredAttribute == 1)
+                                                {
+                                                    <li>
+                                                        <span>Giá Tiền:</span>
+                                                        @Model.ProductViewModel.Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                    </li>
+                                                }
+                                                <li>
+                                                    <span>Ngày Tạo:</span>
+                                                    @Model.ProductViewModel.CreatedOn.ToString("dd/MM/yyyy")
+                                                </li>
+                                                <li>
+                                                    <span>Người Tạo:</span>
+                                                    @Model.ProductViewModel.CreatedBy
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    @if (Model.ProductViewModel.IsRequiredAttribute == 2)
+                                    {
+                                        <h5 class="mb-20 h5 text-blue" style="margin-top: 15px;">Giá Trị Phân Loại</h5>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <ul>
+                                                    @for (int i = 0; i < Model.ProductViewModel.Attributes.Count; i++)
+                                                    {
+
+                                                    <li style="margin: 0;">
+                                                        <span>@(i == 0 ? "Phân Loại:" : "")</span>
+                                                        @Model.ProductViewModel.Attributes[i].Name
+                                                    </li>
+                                                 
+                                                    }
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <ul>
+                                                    @for (int i = 0; i < Model.ProductViewModel.Attributes.Count; i++)
+                                                    {
+                                                        <li style="margin: 0;">
+                                                            <span>@(i == 0 ? "Giá Tiền:" : "")</span>
+                                                            @Model.ProductViewModel.Attributes[i].Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-12 col-sm-12">
+                            <div class="product-detail-desc pd-20 card-box height-100-p">
+                                <div class="profile-tab height-100-p">
+                                    <div class="tab height-100-p">
+                                        <ul class="nav nav-tabs customtab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active"
+                                                   data-toggle="tab"
+                                                   href="#timeline"
+                                                   role="tab">Thông Tin</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link"
+                                                   data-toggle="tab"
+                                                   href="#setting"
+                                                   role="tab">Hình Ảnh</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active"
+                                                 id="timeline"
+                                                 role="tabpanel">
+                                                <br />
+                                                <form asp-controller="Product" asp-action="Update" method="post">
+                                                    <input type="hidden" asp-for="UpdateProductViewModel.Id" />
+                                                    <input type="hidden" asp-for="UpdateProductViewModel.AttributeSetId" />
+                                                    <input type="hidden" asp-for="UpdateAttributeViewModel.AttributeSetId" value="@Model.UpdateProductViewModel.AttributeSetId" />
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Danh Mục Sản Phẩm* :</label>
+                                                                <select asp-for="UpdateProductViewModel.CategoryId" class="gender custom-select form-control" id="categorySelect">
+                                                                    <option value="" data-display="Select" style="pointer-events: none;">Chọn Danh Mục Sản Phẩm</option>
+                                                                    @{
+                                                                        if (Model.Categories != null && Model.Categories.Count() > 0)
+                                                                        {
+                                                                            foreach (var item in Model.Categories)
+                                                                            {
+                                                                                <option value="@item.Id">@item.Name</option>
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                <span asp-validation-for="UpdateProductViewModel.CategoryId"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Loại Sản Phẩm* :</label>
+                                                                <select asp-for="UpdateProductViewModel.SubCategoryId" class="gender custom-select form-control" id="subCategorySelect">
+                                                                    @{
+                                                                        if (Model.SubCategories != null && Model.SubCategories.Count() > 0 && Model.UpdateProductViewModel != null && !string.IsNullOrEmpty(Model.UpdateProductViewModel.SubCategoryId))
+                                                                        {
+                                                                            <option value="" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                                                            foreach (var item in Model.SubCategories)
+                                                                            {
+                                                                                <option value="@item.Id">@item.Name</option>
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="" data-display="Select" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                                <span asp-validation-for="UpdateProductViewModel.SubCategoryId"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Tên Sản Phẩm* :</label>
+                                                                <input type="text" class="form-control full-name" asp-for="UpdateProductViewModel.Name" maxlength="100" />
+                                                                <span asp-validation-for="UpdateProductViewModel.Name"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group" id="price-default">
+                                                                <label>Giá Tiền* :</label>
+                                                                <input type="text" class="form-control vndInput no-spinner" asp-for="UpdateProductViewModel.Price" />
+                                                                <span asp-validation-for="UpdateProductViewModel.Price"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            <label>Phân loại giá trị sản phẩm* :</label>
+                                                            <div class="custom-control custom-radio mb-5">
+                                                                <input type="radio" id="customRadio1" name="UpdateProductViewModel.IsRequiredAttribute" class="custom-control-input" value="1"
+                                                                @(Model.UpdateProductViewModel.IsRequiredAttribute == 1 ? "checked" : "")
+                                                                       onchange="displayBanner(1)">
+                                                                <label class="custom-control-label" for="customRadio1">Theo Mặc Định Sản Phẩm</label>
+                                                                <br>
+                                                                <i style="font-size: 12px;">(Sản phẩm sẽ được tính tiền theo giá trị mặc định)</i>
+                                                            </div>
+
+                                                            <div class="custom-control custom-radio mb-5">
+                                                                <input type="radio" id="customRadio2" name="UpdateProductViewModel.IsRequiredAttribute" class="custom-control-input" value="2"
+                                                                @(Model.UpdateProductViewModel.IsRequiredAttribute == 2 ? "checked" : "")
+                                                                       onchange="displayBanner(2)">
+                                                                <label class="custom-control-label" for="customRadio2">Theo Phân Loại Sản Phẩm</label>
+                                                                <br>
+                                                                <i style="font-size: 12px;">(Sản phẩm sẽ được tính tiền theo giá trị phân loại)</i>
+                                                            </div>
+                                                            <span asp-validation-for="@Model.UpdateProductViewModel.IsRequiredAttribute"></span>
+                                                        </div>
+                                                        <div class="col-md-12 col-sm-12">
+                                                            <div id="banner-attribute" style="margin: 15px; 0;">
+                                                                <table>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th><div class="th-title" style="padding-left: 15px;">Phân Loại* :</div></th>
+                                                                            <th><div class="th-title" style="padding-left: 15px;">Giá Tiền* :</div></th>
+                                                                            <th></th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="table-attribute">
+                                                                        @{
+                                                                            for (int i = 0; i < Model.UpdateAttributeViewModel.Updates.Count; i++)
+                                                                            {
+
+                                                                                <tr id="@($"tr-{i}")" style="@(Model.UpdateAttributeViewModel.Updates[i].IsDeleted ? "display: none;":"")">
+                                                                                    <input type="hidden" class="form-control" name="UpdateAttributeViewModel.Updates[@i].Id" value="@Model.UpdateAttributeViewModel.Updates[i].Id">
+                                                                                    <input name="UpdateAttributeViewModel.Updates[@i].IsDeleted" value="@(Model.UpdateAttributeViewModel.Updates[i].IsDeleted ? "true" : "false")" type="hidden" />
+                                                                                    <td>
+                                                                                        <div class="form-group">
+                                                                                            <input type="text" class="form-control" name="UpdateAttributeViewModel.Updates[@i].Name" value="@Model.UpdateAttributeViewModel.Updates[i].Name">
+                                                                                            <span class="txt-overflow" asp-validation-for="UpdateAttributeViewModel.Updates[i].Name"></span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group" style="padding-left: 15px;">
+                                                                                            <input type="text" class="form-control vndInput" name="UpdateAttributeViewModel.Updates[@i].Price" value="@Model.UpdateAttributeViewModel.Updates[i].Price">
+                                                                                            <span class="txt-overflow" asp-validation-for="UpdateAttributeViewModel.Updates[i].Price"></span>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <div class="form-group" style="padding-left: 15px;">
+                                                                                            <button type="button" class="btn btn-danger" onclick="removeElementById('tr-@i',@i)">
+                                                                                                <i class="bi bi-x-octagon" style="color: #FFFFFF;"></i>
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                        }
+                                                                    </tbody>
+                                                                </table>
+                                                                <span asp-validation-for="@Model.UpdateAttributeViewModel.Updates"></span>
+                                                                <div style="display: flex; justify-content: flex-start;">
+                                                                    <button type="button" class="btn btn-primary" onclick="addAttribute()">
+                                                                        <i class="bi bi-plus-circle-dotted" style="color: #FFFFFF;"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label>Mô Tả Sản Phẩm :</label>
+                                                                <textarea asp-for="UpdateProductViewModel.Description" rows="2" class="form-control" maxlength="500"></textarea>
+                                                                <span asp-validation-for="UpdateProductViewModel.Description"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="modal-footer">
+                                                        <div class="flex-box">
+                                                            <div>
+                                                                @if (Model.ProductViewModel.IsActive)
+                                                                {
+                                                                    <button class="btn btn-danger" type="button" onclick="deletePress('@Model.ProductViewModel.Id','@Model.ProductViewModel.Name')">
+                                                                      Ngưng Hoạt Động
+                                                                    </button>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <button class="btn btn-primary" type="button" onclick="activatePress('@Model.ProductViewModel.Id','@Model.ProductViewModel.Name')">
+                                                                         Hoạt Động
+                                                                    </button>
+                                                                }
+                                                            </div>
+                                                            <div style="margin-left: 10px;">
+                                                                <button type="submit"
+                                                                        class="btn btn-success">
+                                                                    Cập Nhật
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="tab-pane fade height-100-p" id="setting"
+                                                 role="tabpanel">
+                                                <br />
+                                                <form asp-controller="Product" asp-action="ChangeImage" method="post" enctype="multipart/form-data">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div>
+                                                                <input type="hidden" asp-for="Image.ProductId" value="@Model.ProductViewModel.Id" />
+                                                                <input type="hidden" asp-for="Image.ImgSetId" value="@Model.ProductViewModel.ImageSetId" />
+                                                                <input type="file" class="form-control" maxlength="1" asp-for="Image.Images" id="file"
+                                                                       onchange="return fileValidation()" accept="image/*" />
+                                                                <div id="imagePreview"></div>
+                                                                <span asp-validation-for="Image.Images"></span>
+                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="modal-footer">
+                                                        <button type="submit"
+                                                                class="btn btn-success">
+                                                            Cập Nhật
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Activate Confirmation Modal -->
+<div class="modal fade" id="activateModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập Nhật Trạng Thái</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Xác nhận: Sản phẩm <b id="activeAdmin"></b> hoạt động trở lại?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                <form asp-action="UpdateActive" asp-controller="Product" method="post" style="display:inline;">
+                    <input type="hidden" name="productId" id="activateAccId" />
+                    <button type="submit" class="btn btn-success">Hoạt Động</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cập Nhật Trạng Thái</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Xác nhận: Sản phẩm <b id="adminUnActive"></b> sẽ ngưng hoạt động ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                <form asp-action="UpdateActive" asp-controller="Product" method="post" style="display:inline;">
+                    <input type="hidden" name="productId" id="deleteAccId" />
+                    <button type="submit" class="btn btn-danger">Ngưng Hoạt Động</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+
+@section Scripts {
+    <script src="vendors/scripts/steps-setting.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#categorySelect').change(function () {
+                var categoryId = $(this).val();
+                if (categoryId) {
+                    $.ajax({
+                        url: '@Url.Action("GetSubCategories", "SubCategory")',
+                        type: 'GET',
+                        data: { categoryId: categoryId },
+                        success: function (data) {
+                            $('#subCategorySelect').empty();
+                            if (data && data.length > 0) {
+                                $('#subCategorySelect').append('<option value="">Chọn Loại Sản Phẩm</option>');
+                            }
+                            $.each(data, function (i, item) {
+                                $('#subCategorySelect').append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#subCategorySelect').empty().append('<option value="">Chọn Loại Sản Phẩm</option>');
+                }
+            });
+        });
+
+        function displayBanner(type) {
+            var div = document.getElementById("banner-attribute");
+            var defaultDiv = document.getElementById("price-default");
+            if (div != null && defaultDiv != null) {
+                var inputElement = defaultDiv.querySelector("input");
+                if (type == 2) {
+                    div.style.display = "block";
+                    inputElement.setAttribute("readonly", "true");
+                } else {
+                    div.style.display = "none";
+                    inputElement.removeAttribute("readonly")
+                }
+            }
+        }
+
+        var attributeCount = @Model.UpdateAttributeViewModel.Updates.Count;
+        function addAttribute() {
+            var tbody = document.getElementById("table-attribute");
+            if (tbody != null) {
+                const newRowId = `tr-${attributeCount}`;
+                const newRow = ` <tr id="${newRowId}">
+                            <input type="hidden" class="form-control" name="UpdateAttributeViewModel.Updates[${attributeCount}].Id">
+                            <input name="UpdateAttributeViewModel.Updates[${attributeCount}].IsDeleted" value="false" type="hidden" />
+                            <td>
+                                <div class="form-group">
+                                                    <input type="text" class="form-control" name="UpdateAttributeViewModel.Updates[${attributeCount}].Name">
+                                    <span class="txt-overflow"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group" style="padding-left: 15px;">
+                                                    <input type="text" class="form-control vndInput" name="UpdateAttributeViewModel.Updates[${attributeCount}].Price">
+                                    <span class="txt-overflow"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-group" style="padding-left: 15px;">
+                                            <button type="button" class="btn btn-danger" onclick="removeElementById('${newRowId}',${attributeCount})">
+                                        <i class="bi bi-x-octagon" style="color: #FFFFFF;"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                tbody.insertAdjacentHTML('beforeend', newRow);
+                attributeCount++;
+            }
+        }
+        function removeElementById(elementId, index) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                document.querySelector(`input[name='UpdateAttributeViewModel.Updates[${index}].IsDeleted']`).value = 'true';
+                element.style.display = "none";
+            }
+        }
+
+        function activatePress(proId, name) {
+            document.getElementById("activeAdmin").innerHTML = name;
+            document.getElementById("activateAccId").value = proId;
+            $('#activateModal').modal('show');
+        }
+
+        function deletePress(proId, name) {
+            document.getElementById("adminUnActive").innerHTML = name;
+            document.getElementById("deleteAccId").value = proId;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+
+    <script>
+        function fileValidation() {
+            var fileInput =
+                document.getElementById('file');
+
+            var filePath = fileInput.value;
+
+            // Allowing file type
+            var allowedExtensions =
+                /(\.jpg|\.jpeg|\.png)$/i;
+
+            if (!allowedExtensions.exec(filePath)) {
+            
+                toastError("Chỉ cho phép .jpg, .jpeg, .png")
+                fileInput.value = '';
+                return false;
+            }
+            else {
+
+                // Image preview
+                if (fileInput.files && fileInput.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        document.getElementById(
+                            'imagePreview').innerHTML =
+                            '<img src="' + e.target.result
+                            + '"/>';
+                    };
+
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+            }
+        }
+    </script>
+    @if (Model.UpdateProductViewModel != null)
+    {
+        <script>
+            $(function () {
+                displayBanner(@Html.Raw(Model.UpdateProductViewModel.IsRequiredAttribute));
+            });
+        </script>
+    }
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

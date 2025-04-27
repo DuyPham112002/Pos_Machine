@@ -1,0 +1,6 @@
+@Cosplane_API_HostAddress = http://localhost:5030
+
+GET {{Cosplane_API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

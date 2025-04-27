@@ -1,0 +1,134 @@
+﻿@using Client_ViewModel.Auth
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+@model CheckDeviceViewModel
+<section class="h-100 gradient-form" style="background-color: #3D8BF2;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-xl-10">
+                <div class="card rounded-3 text-black">
+                    <div class="row g-0">
+                        <div class="col-lg-6">
+                            <div class="card-body p-md-5 mx-md-4">
+
+                                <div class="text-center">
+                                    <img src="~/Brand/Logo-light.png"
+                                         style="width: 185px;" alt="logo">
+                                    <h4 class="mt-1 mb-5 pb-1">Đăng nhập SnapPOS</h4>
+                                </div>
+
+                                <form asp-action="SignIn" asp-controller="Auth" method="post" id="loginForm">
+                                    <div class="select-role">
+                                    </div>
+                                    <div class="input-group custom">
+                                        <input type="text"
+                                               class="form-control form-control-lg"
+                                               placeholder="Tên Đăng Nhập" required="" asp-for="login.Username" maxlength="50" />
+                                        <div class="input-group-append custom">
+                                            <span class="input-group-text">
+                                                <i class="icon-copy dw dw-user1"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group custom">
+                                        <input type="password"
+                                               class="form-control form-control-lg"
+                                               placeholder="Mật Khẩu" required="" asp-for="login.Password" maxlength="30" />
+                                        <div class="input-group-append custom">
+                                            <span class="input-group-text">
+                                                <i class="dw dw-padlock1"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                
+                                    @*                         <input type="hidden" asp-for="fingerprint.DeviceFingerprint" id="Fingerprint" /> <!-- Hidden input for Fingerprint -->
+                                    *@
+                                    <input type="hidden" asp-for="browserInfo.OS" id="OS" />
+                                    <input type="hidden" asp-for="browserInfo.OSVersion" id="OSVersion" />
+                                    <input type="hidden" asp-for="browserInfo.TimeZone" id="TimeZone" />
+                                    <input type="hidden" asp-for="browserInfo.AvailableResolution" id="AvailableResolution" />
+                                    <input type="hidden" asp-for="browserInfo.Language" id="Language" />
+                                    <input type="hidden" asp-for="browserInfo.Browser" id="Browser" />
+                                    <input type="hidden" asp-for="browserInfo.BrowserVersion" id="BrowserVersion" />
+                                    <input type="hidden" asp-for="browserInfo.Engine" id="Engine" />
+                                    <input type="hidden" asp-for="browserInfo.Plugins" id="Plugins" />
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="input-group mb-0">
+                                                <!--
+                                                    use code for form submit
+                                                    <input class="btn btn-primary btn-lg btn-block" type="submit" value="Sign In">
+                                                -->
+                                                <button class="btn btn-primary btn-lg btn-block" type="button" onclick="collectDeviceInfoAndSubmit()">
+
+                                                    Đăng Nhập
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
+                            <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                               <img src="~/Brand/login-bg.jpg"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+
+@section Scripts {
+
+    <script>
+        function collectDeviceInfoAndSubmit() {
+            var client = new ClientJS();
+
+            document.getElementById('OS').value = client.getOS();
+            document.getElementById('OSVersion').value = client.getOSVersion();
+            document.getElementById('TimeZone').value = client.getTimeZone();
+            document.getElementById('AvailableResolution').value = client.getAvailableResolution();
+            document.getElementById('Language').value = client.getLanguage();
+            document.getElementById('Browser').value = client.getBrowser();
+            document.getElementById('BrowserVersion').value = client.getBrowserVersion();
+            document.getElementById('Engine').value = client.getEngine();
+            document.getElementById('Plugins').value = client.getPlugins();
+
+            // Submit form
+            document.getElementById('loginForm').submit();
+        }
+    </script>
+
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

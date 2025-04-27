@@ -1,0 +1,255 @@
+﻿@using Client_ViewModel.Payment
+@using Microsoft.AspNetCore.Html
+@model CreatePaymentViewModel
+<style>
+    .food_img_price_des {
+        display: flex;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+
+        .food_img_price_des .cart_food_img {
+            width: 85px;
+            height: 51px;
+            overflow: hidden;
+            border: 1px solid #d4d4d491;
+            padding: 4px;
+        }
+
+            .food_img_price_des .cart_food_img img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .food_img_price_des .food_dec_flex {
+            margin-left: 1rem;
+        }
+
+            .food_img_price_des .food_dec_flex p {
+                margin: 0;
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+                .food_img_price_des .food_dec_flex p:last-child {
+                    color: red;
+                }
+
+    .yourCart_div {
+        border: 1px solid #d4d4d491;
+        padding: 19px;
+    }
+
+
+    .cart_total .price_total {
+        display: flex;
+        margin-bottom: 5px;
+        justify-content: space-between;
+    }
+
+        .cart_total .price_total p {
+            color: #737373;
+            margin: 0;
+            font-family: "Montserrat", sans-serif;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+    .total_btn_cart {
+        width: 100%;
+        background: #ac1734 !important;
+        border-color: #ac1734 !important;
+        padding: 9px 19px !important;
+        display: flex;
+        justify-content: space-between;
+        color: #fff;
+        font-weight: 500;
+        border-style: unset;
+        font-family: "Montserrat", sans-serif;
+    }
+</style>
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Thanh Toán</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a>Checkout</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Thanh Toán
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-right">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="yourCart_div d-20 card-box mb-30">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p class="billing_text">Mã Hóa Đơn: @Model.Order.Code</p>
+                            <p class="billing_text" style="margin-right: 15px;">Ngày Tạo: @Model.Order.CreatedOn</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="personal-info" style="max-height: 550px;">
+                                    <div class="row" style="width: 100%; height: 100%; overflow: auto;">
+                                        <div class="col-12">
+                                            <table class="table table-striped" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="datatable-title">Sản Phẩm</th>
+                                                        <th class="datatable-title">Giá Tiền</th>
+                                                        <th class="datatable-title">Số Lượng</th>
+                                                        <th class="datatable-title">Tổng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @{
+                                                        if (Model.Orders != null && Model.Orders.Count() > 0)
+                                                        {
+                                                            foreach (var item in Model.Orders)
+                                                            {
+                                                                HtmlString name = new HtmlString(item.ProductName);
+                                                                <tr>
+                                                                    <td data-toggle="tooltip" data-placement="top">
+                                                                        <div class="food_img_price_des">
+                                                                            <div class="cart_food_img">
+                                                                                <img src="@($"/Payment/document/{item.ImageUrl.Replace("Images/","")}")">
+                                                                            </div>
+                                                                            <div class="food_dec_flex">
+                                                                                <div class="txt-title">
+                                                                                    @name
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.Price">
+                                                                        <div class="txt-title">
+                                                                            @item.Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.Quantity">
+                                                                        <div class="txt-title">
+                                                                            @($"X{item.Quantity}")
+                                                                        </div>
+                                                                    </td>
+                                                                    <td data-toggle="tooltip" data-placement="top" title="@item.SubTotal">
+                                                                        <div class="txt-title">
+                                                                            @item.SubTotal.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Ghi Chú Hóa Đơn:</label>
+                                    <textarea rows="2" class="form-control" maxlength="500" readonly>@(!string.IsNullOrEmpty(Model.Order.Note) ? Model.Order.Note : "Không có ghi chú")</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="total_btn_cart" style="background: #d4d4d4 !important; color: #000000;">
+                            <span>Số Lượng:</span>
+                            <span>@Model.Order.Quantity SP</span>
+                        </div>
+                        <div class="total_btn_cart">
+                            <span>Tổng Tiền:</span>
+                            <span>
+                                @Model.Order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                            </span>
+                        </div>
+                        <form asp-action="Create" asp-controller="Payment" method="post">
+                            <input type="hidden" asp-for="@Model.Create.OrderId" value="@Model.Order.Id" />
+                            <input type="hidden" asp-for="@Model.Create.Amount" value="@Model.Order.Total" />
+                            <div class="row" style="margin-top: 15px;">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Hình Thức Thanh Toán* :</label>
+                                        <div class="custom-control custom-radio mb-5" style="margin-top: 15px;">
+                                            <input type="radio" asp-for="Create.PaymentMethod" checked
+                                                   id="customRadio1"
+                                                   value="1"
+                                                   class="custom-control-input" />
+                                            <label class="custom-control-label" for="customRadio1">Thanh Toán Bằng Tiền Mặt</label>
+                                        </div>
+                                        <div class="custom-control custom-radio mb-5" style="margin-top: 15px;">
+                                            <input type="radio" asp-for="Create.PaymentMethod"
+                                                   id="customRadio2"
+                                                   value="2"
+                                                   class="custom-control-input" />
+                                            <label class="custom-control-label" for="customRadio2">Thanh Toán Chuyển Khoản</label>
+                                        </div>
+                                        <span asp-validation-for="Create.PaymentMethod"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label>Tiền Khách Gửi* :</label>
+                                        <input type="text" asp-for="@Model.Create.Received" class="form-control vndInput no-spinner" id="receiveMoney" />
+                                        <span asp-validation-for="@Model.Create.Received" id="validateReceived"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12">
+                                <div style="display: flex; justify-content: space-between;align-items: center;">
+                                    <div>
+                                    </div>
+                                    <div>
+                                        <a href="Order/Edit/@Model.Order.Id" class="btn btn-primary" style="margin-right: 6px;">
+                                            Chỉnh Sửa
+                                        </a>
+                                        <button type="submit" class="btn btn-success">
+                                            Thanh Toán
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <br />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

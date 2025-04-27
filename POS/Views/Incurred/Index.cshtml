@@ -1,0 +1,105 @@
+﻿@using Client_ViewModel.Incurred
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model IncurredViewModel
+
+@* <div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px w-100"> *@
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+            <div class="row">
+                <div class="col-lg-3 col-sm-0"></div>
+
+                <div class="col-lg-6 col-sm-12">
+                    <div class="pd-20 card-box mb-30 max-width-1000">
+                        <div class="clearfix">
+                            <div class="text-center text-sm-center">
+                                <h4 class="dark-text h4">Điền thông tin nếu có chi phí phát sinh</h4>
+                                <p class="mb-30">Nhập theo yêu cầu dưới đây</p>
+                            </div>
+                        </div>
+                        <form asp-action="CreateIncurred" asp-controller="Incurred" method="post">
+                            <div class="row ">
+                                    <input asp-for="ShiftId" hidden />
+                                       
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <label class="col-form-label">Tiêu đề</label>
+                                    <input asp-for="Title"
+                                           class="form-control"
+                                           type="text"
+                                           placeholder="Nhập tiêu đề"
+                                           required />
+                                </div>
+                 
+                            </div>
+                            <div class="row ">
+                    
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <label class="col-form-label ">Số tiền</label>
+                                        <input  type="text" class="form-control vndInputN no-spinner" asp-for="Amount" required placeholder="Nhập số tiền" />
+                                </div>
+      
+                            </div>
+                            <div class="row ">
+
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <label class="col-form-label">Mô tả lý do</label>
+                                    <input asp-for="Description"
+                                           class="form-control"
+                                           type="text"
+                                           placeholder="Nhập mô tả"
+                                           required />
+                                </div>
+                          
+                            </div>
+
+
+                            <div class="row" style="margin-top: 20px;">
+                                  <div class="col-lg-12 col-sm-12 col-md-12">
+                                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                                            <div class="text-center"> <button type="submit" class="btn btn-success" style="width: 100%;">Tạo Phát Sinh </button></div>
+                                            <div class="text-center"><a href="/Shift" class="btn btn-primary" style="width: 110px;">Trở Về</a></div>
+                                      </div>
+                                  </div>
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+                <div class="col-lg-3 col-sm-0"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}
+   

@@ -1,0 +1,225 @@
+﻿@using Client_ViewModel.Category;
+@model DetailCategoryViewModel
+
+<style>
+    .wizard-custom,
+    .wizard-custom .nav-tabs,
+    .wizard-custom .nav-tabs .nav-item {
+        position: relative;
+    }
+
+        .wizard-custom .nav-tabs:after {
+            content: "";
+            width: 80%;
+            border-bottom: solid 2px #ccc;
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            top: 38%;
+            z-index: -1;
+        }
+
+        .wizard-custom .nav-tabs .nav-item .nav-link {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 6%;
+            background: white;
+            border: 2px solid #ccc;
+            color: #ccc;
+            z-index: 10;
+        }
+
+            .wizard-custom .nav-tabs .nav-item .nav-link:hover {
+                color: #333;
+                border: 2px solid #333;
+            }
+
+            .wizard-custom .nav-tabs .nav-item .nav-link.active {
+                background: #fff;
+                border: 2px solid #0dcaf0;
+                color: #0dcaf0;
+            }
+
+            .wizard-custom .nav-tabs .nav-item .nav-link:after {
+                content: " ";
+                position: absolute;
+                left: 50%;
+                transform: translate(-50%);
+                opacity: 0;
+                margin: 0 auto;
+                bottom: 0px;
+                border: 5px solid transparent;
+                border-bottom-color: #0dcaf0;
+                transition: 0.1s ease-in-out;
+            }
+
+    .nav-tabs .nav-item .nav-link.active:after {
+        content: " ";
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        opacity: 1;
+        margin: 0 auto;
+        bottom: 0px;
+        border: 10px solid transparent;
+        border-bottom-color: #0dcaf0;
+    }
+
+    .wizard-custom .nav-tabs .nav-item .nav-link svg {
+        font-size: 25px;
+    }
+
+</style>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Danh Mục</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Category/Index">Danh Sách</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Chi Tiết
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-right">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pd-20 card-box mb-30">
+                <div style="padding: 20px 0;">
+                    <h4 class="h4">Tên Danh Mục* :</h4>
+                </div>
+                <form asp-action="Update" asp-controller="Category" method="post">
+                    <input type="hidden" asp-for="UpdateCategoryViewModel.Id" value="@Model.UpdateCategoryViewModel.Id" />
+                    <section class="personal-info">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">                       
+                                    <input type="text" class="form-control full-name" asp-for="UpdateCategoryViewModel.Name" maxlength="100" />
+                                    <span asp-validation-for="UpdateCategoryViewModel.Name"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-success" type="submit">Cập Nhật</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Simple Datatable start -->
+            <div class="card-box mb-30">
+                <div class="pd-20">
+                    <h4 class="h4">Danh Sách loại sản phẩm</h4>
+                </div>
+                <div class="pb-20">
+                    <table class="table data-table-export hover display nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Loại sản phẩm</th>
+                                <th>Ngày Tạo</th>
+                                <th>Người Tạo</th>
+                                <th>Trạng Thái</th>
+                                <th class="datatable-nosort">Tùy Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SubCategories != null && Model.SubCategories.Count > 0)
+                            {
+                                int count = 1;
+                                foreach (var subCategory in Model.SubCategories)
+                                {
+                                    <tr>
+                                        <td data-toggle="tooltip" data-placement="top" title="@count">
+                                            <div>@count</div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subCategory.Name">
+                                            <div class="txt-title">
+                                                @subCategory.Name
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subCategory.CreatedOn.ToString("dd/MM/yyyy")">
+                                            <div class="txt-title">
+                                                @subCategory.CreatedOn.ToString("dd/MM/yyyy")
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subCategory.CreatedBy">
+                                            <div class="txt-title">
+                                                @subCategory.CreatedBy
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (subCategory.IsActive)
+                                            {
+                                                <span class="badge badge-pill active-badge" style="padding: 0;font-size: 12px;">
+                                                    <i style="color:green" class="icon-copy bi bi-record-fill"></i> Hoạt Động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill deactivated-badge" style="padding: 0;font-size: 12px;">
+                                                    <i class="icon-copy bi bi-record"></i> Ngừng Hoạt Động
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0;">
+                                                    Tùy Chọn
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="/SubCategory/Detail/@subCategory.Id">
+                                                        <i class="icon-copy bi bi-info-circle"></i> Chi Tiết
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    count++;
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="8">Không Có Loại Sản Phẩm Nào Được Tìm Thấy</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

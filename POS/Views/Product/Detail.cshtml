@@ -1,0 +1,321 @@
+﻿@using Client_ViewModel.Product
+@model ProductDetailViewModel
+
+<style>
+    .slick-next.slick-arrow {
+        display: none !important;
+    }
+
+    .slick-prev.slick-arrow {
+        display: none !important;
+    }
+
+    .th-title {
+        margin-bottom: 10px;
+        font-weight: 500;
+        font-size: 15px;
+        white-space: nowrap;
+    }
+
+    .poinster {
+        pointer-events: none !important;
+    }
+</style>
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="title">
+                            <h4>Chi Tiết Sản Phẩm</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="/Product/Index">Danh Sách</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Chi Tiết
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="product-wrap">
+                <div class="product-detail-wrap mb-30">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-12 col-sm-12">
+                            <div class="product-detail-desc pd-20 card-box height-100-p">
+                                <div class="product-slide">
+                                    <img style="width: 100%; height: 350px;" src="@(!string.IsNullOrEmpty(Model.ProductViewModel.Images) ? $"/Product/document/{Model.ProductViewModel.Images.Replace("Images/","").Trim()}" : "vendors/images/new-loader.gif")" alt="" />
+                                </div>
+                                <div class="profile-info">
+                                    <h5 class="mb-20 h5 text-blue">Thông Tin Hiện Tại</h5>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <ul>
+                                                <li>
+                                                    <span>Tên Sản Phẩm:</span>
+                                                    @Model.ProductViewModel.Name
+                                                </li>
+                                                <li>
+                                                    <span>Danh Mục:</span>
+                                                    @Model.ProductViewModel.CategoryName
+                                                </li>
+                                                <li>
+                                                    <span>Loại Sản Phẩm:</span>
+                                                    @Model.ProductViewModel.SubCategoryName
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-lg-6 col-md-12 col-sm-12">
+                                            <ul>
+                                                @if (Model.ProductViewModel.IsRequiredAttribute == 1)
+                                                {
+                                                    <li>
+                                                        <span>Giá Tiền:</span>
+                                                        @Model.ProductViewModel.Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                    </li>
+                                                }
+                                                <li>
+                                                    <span>Ngày Tạo:</span>
+                                                    @Model.ProductViewModel.CreatedOn.ToString("dd/MM/yyyy")
+                                                </li>
+                                                <li>
+                                                    <span>Người Tạo:</span>
+                                                    @Model.ProductViewModel.CreatedBy
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    @if (Model.ProductViewModel.IsRequiredAttribute == 2)
+                                    {
+                                        <h5 class="mb-20 h5 text-blue" style="margin-top: 15px;">Giá Trị Phân Loại</h5>
+                                        <div class="row">
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <ul>
+                                                    @for (int i = 0; i < Model.ProductViewModel.Attributes.Count; i++)
+                                                    {
+
+                                                        <li style="margin: 0;">
+                                                            <span>@(i == 0 ? "Phân Loại:" : "")</span>
+                                                            @Model.ProductViewModel.Attributes[i].Name
+                                                        </li>
+
+                                                    }
+                                                </ul>
+                                            </div>
+                                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                                <ul>
+                                                    @for (int i = 0; i < Model.ProductViewModel.Attributes.Count; i++)
+                                                    {
+                                                        <li style="margin: 0;">
+                                                            <span>@(i == 0 ? "Giá Tiền:" : "")</span>
+                                                            @Model.ProductViewModel.Attributes[i].Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-7 col-md-12 col-sm-12">
+                            <div class="product-detail-desc pd-20 card-box height-100-p">
+                                <div class="profile-tab height-100-p">
+                                    <div class="tab height-100-p">
+                                        <ul class="nav nav-tabs customtab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active"
+                                                   data-toggle="tab"
+                                                   href="#timeline"
+                                                   role="tab">Thông Tin Sản Phẩm</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active"
+                                                 id="timeline"
+                                                 role="tabpanel">
+                                                <br />
+                                                <form>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Danh Mục Sản Phẩm :</label>
+                                                                <select class="gender custom-select form-control poinster" id="categorySelect">
+                                                                    <option value="" data-display="Select" style="pointer-events: none;">Chọn Danh Mục Sản Phẩm</option>
+                                                                    @{
+                                                                        if (Model.Categories != null && Model.Categories.Count() > 0)
+                                                                        {
+                                                                            foreach (var item in Model.Categories)
+                                                                            {
+                                                                                if (item.Id == Model.ProductViewModel.CategoryId)
+                                                                                {
+                                                                                    <option value="@item.Id" selected>@item.Name</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Id">@item.Name</option>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Loại Sản Phẩm :</label>
+                                                                <select class="gender custom-select form-control poinster" id="subCategorySelect">
+                                                                    @{
+                                                                        if (Model.SubCategories != null && Model.SubCategories.Count() > 0 && Model.ProductViewModel != null && !string.IsNullOrEmpty(Model.ProductViewModel.SubCategoryId))
+                                                                        {
+                                                                            <option value="" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                                                            foreach (var item in Model.SubCategories)
+                                                                            {
+                                                                                if (item.Id == Model.ProductViewModel.SubCategoryId)
+                                                                                {
+                                                                                    <option value="@item.Id" selected>@item.Name</option>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <option value="@item.Id">@item.Name</option>
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <option value="" data-display="Select" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group poinster">
+                                                                <label>Tên Sản Phẩm :</label>
+                                                                <input type="text" class="form-control full-name" value="@Model.ProductViewModel.Name" maxlength="100" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group poinster" id="price-default">
+                                                                <label>Giá Tiền :</label>
+                                                                <input type="text" class="form-control vndInput no-spinner" @(Model.ProductViewModel.IsRequiredAttribute == 2 ? "readonly" : "") value="@Model.ProductViewModel.Price" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6 col-sm-12 poinster">
+                                                            <label>Phân loại giá trị sản phẩm :</label>
+                                                            <div class="custom-control custom-radio mb-5">
+                                                                <input type="radio" id="customRadio1" name="ProductViewModel.IsRequiredAttribute" class="custom-control-input" value="1"
+                                                                @(Model.ProductViewModel.IsRequiredAttribute == 1 ? "checked" : "")
+                                                                       onchange="displayBanner(1)">
+                                                                <label class="custom-control-label" for="customRadio1">Theo Mặc Định Sản Phẩm</label>
+                                                                <br>
+                                                                <i style="font-size: 12px;">(Sản phẩm sẽ được tính tiền theo giá trị mặc định)</i>
+                                                            </div>
+
+                                                            <div class="custom-control custom-radio mb-5">
+                                                                <input type="radio" id="customRadio2" name="ProductViewModel.IsRequiredAttribute" class="custom-control-input" value="2"
+                                                                @(Model.ProductViewModel.IsRequiredAttribute == 2 ? "checked" : "")
+                                                                       onchange="displayBanner(2)">
+                                                                <label class="custom-control-label" for="customRadio2">Theo Phân Loại Sản Phẩm</label>
+                                                                <br>
+                                                                <i style="font-size: 12px;">(Sản phẩm sẽ được tính tiền theo giá trị phân loại)</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6 col-sm-12 poinster">
+                                                            @if (Model.ProductViewModel.IsRequiredAttribute == 2)
+                                                            {
+                                                                <div id="banner-attribute">
+                                                                    <table>
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th><div class="th-title" style="padding-left: 15px;">Phân Loại :</div></th>
+                                                                                <th><div class="th-title" style="padding-left: 15px;">Giá Tiền :</div></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody id="table-attribute">
+                                                                            @{
+                                                                                for (int i = 0; i < Model.Attributes.Count; i++)
+                                                                                {
+
+                                                                                    <tr>
+                                                                                        <td>
+                                                                                            <div class="form-group">
+                                                                                                <input type="text" class="form-control" value="@Model.Attributes[i].Name">
+                                                                                            </div>
+                                                                                        </td>
+                                                                                        <td>
+                                                                                            <div class="form-group" style="padding-left: 15px;">
+                                                                                                <input type="text" class="form-control vndInput" value="@Model.Attributes[i].Price">
+                                                                                            </div>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                }
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <label>Mô Tả Sản Phẩm :</label>
+                                                                <textarea rows="2" class="form-control" maxlength="500" readonly>@Model.ProductViewModel.Description</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                    <div class="modal-footer">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script src="vendors/scripts/steps-setting.js"></script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

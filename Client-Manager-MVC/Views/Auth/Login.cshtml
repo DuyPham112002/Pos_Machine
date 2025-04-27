@@ -1,0 +1,89 @@
+﻿@using Client_ViewModel.Auth
+
+
+@{
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+@model CheckLoginViewModel
+
+
+<section class="vh-100" style="background-color: #3D8BF2;">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-10">
+                <div class="card" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div class="col-md-6 col-lg-5 d-none d-md-block">
+                            <img src="Brand/login-bg.png"
+                                 alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+                        </div>
+                        <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-4 p-lg-5 text-black">
+
+                                <form asp-action="SignIn" asp-controller="Auth" method="post">
+
+                                    
+                                    <div class="d-flex align-items-center mb-3 pb-1">
+                                      
+                                        <span class="h1 fw-bold mb-0"> SnapPOS</span>
+                                    </div>
+
+                                    <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Đăng nhập trang quản lý</h5>
+
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="text"
+                                               class="form-control form-control-lg"
+                                               placeholder="Tên Đăng Nhập..." asp-for="Username" maxlength="50" />
+                                        <span asp-validation-for="Username"></span>
+                                        <label class="form-label" for="form2Example17" style="margin-top: 5px;">Tên Đăng Nhập</label>
+                                    </div>
+
+                                    <div data-mdb-input-init class="form-outline mb-4">
+                                        <input type="password"
+                                               class="form-control form-control-lg"
+                                               placeholder="Mật Khẩu..." asp-for="Password" maxlength="30" />
+                                        <span asp-validation-for="Password"></span>
+                                        <label class="form-label" for="form2Example27" style="margin-top: 5px;">Mật Khẩu</label>
+                                    </div>
+
+                                    <div class="pt-1 mb-4">
+                                        <button class="btn btn-primary btn-lg btn-block"
+                                                type="submit">
+                                            Đăng Nhập
+                                        </button>
+                                    </div>
+
+                                  
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

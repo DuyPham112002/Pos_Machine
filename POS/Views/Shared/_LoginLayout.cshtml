@@ -1,0 +1,59 @@
+﻿<html>
+<head>
+    <!-- Title -->
+    <title>Máy Tính Tiền - SnapPOS</title>
+    <!-- Meta -->
+    <meta charset="utf-8" />
+    <!-- Site favicon -->
+    <base href="~/" />
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="Brand/ico.png" />
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="vendors/styles/icon-font.min.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link href="notify/notify.css" rel="stylesheet">
+</head>
+<body class="login-page" style="background-color:#3D8BF2">
+    <style>
+        .field-validation-error {
+            color: red !important;
+        }
+    </style>
+
+
+    @RenderBody()
+    <!-- Nhúng thư viện ClientJS -->
+    <script src="https://cdn.jsdelivr.net/npm/clientjs@0.2.1/dist/client.min.js"></script>
+    <!-- Required vendors -->
+    <base href="~/" />
+    <!-- js -->
+    <script src="vendors/scripts/core.js"></script>
+    <script src="vendors/scripts/script.min.js"></script>
+    <script src="vendors/scripts/process.js"></script>
+    <script src="vendors/scripts/layout-settings.js"></script>
+    <script src="vendors/scripts/toastnotify.js"></script>
+
+    <script src="~/signalr/dist/browser/signalr.js"></script>
+
+    <script src="~/Notification/notify.js"></script>
+
+    <!-- Google Tag Manager (noscript) -->
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<html lang="en">
+<head>
+    <!-- Title -->
+    <title>Quản Lý Quán - SnapPOS</title>
+    <!-- Meta -->
+    <!-- Basic Page Info -->
+    <meta charset="utf-8" />
+    <base href="~/" />
+    <!-- Site favicon -->
+    <link rel="apple-touch-icon"
+          sizes="180x180"
+          href="vendors/images/apple-touch-icon.png" />
+    <link rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="vendors/images/favicon-32x32.png" />
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="vendors/images/favicon-16x16.png" />
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="vendors/styles/core.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="vendors/styles/icon-font.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="src/plugins/datatables/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="src/plugins/datatables/css/responsive.bootstrap4.min.css" />
+    <link rel="stylesheet" type="text/css" href="vendors/styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="src/plugins/jquery-steps/jquery.steps.css" />
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async
+            src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3SGGX85"></script>
+    <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2973766580778258"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/notify/notify.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+        .field-validation-error {
+            color: red !important;
+        }
+
+        .no-spinner {
+            -moz-appearance: textfield; /* Firefox */
+            -webkit-appearance: none; /* Chrome, Safari */
+            appearance: none; /* Các trình duyệt khác */
+        }
+
+            .no-spinner::-webkit-inner-spin-button,
+            .no-spinner::-webkit-outer-spin-button {
+                -webkit-appearance: none; /* Ẩn nút tăng/giảm */
+                margin: 0; /* Đảm bảo không có khoảng trống */
+            }
+    </style>
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon bi bi-list"></div>
+            <div class="search-toggle-icon bi bi-search"
+                 data-toggle="header_search"></div>
+            <div class="header-search">
+            </div>
+        </div>
+        <div class="header-right">
+            @* <div class="dashboard-setting user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow"
+                       href="javascript:;"
+                       data-toggle="right-sidebar">
+                        <i class="dw dw-calculator"></i>
+                    </a>
+                </div>
+            </div> *@
+            @* <div class="user-notification">
+                <div class="dropdown">
+                    <a class="dropdown-toggle no-arrow"
+                       href="#"
+                       role="button"
+                       data-toggle="dropdown">
+                        <i class="icon-copy dw dw-notification"></i>
+                        <span class="badge notification-active"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="notification-list mx-h-350 customscroll">
+                            <ul>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/img.jpg" alt="" />
+                                        <h3>John Doe</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo1.jpg" alt="" />
+                                        <h3>Lea R. Frith</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo2.jpg" alt="" />
+                                        <h3>Erik L. Richards</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo3.jpg" alt="" />
+                                        <h3>John Doe</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/photo4.jpg" alt="" />
+                                        <h3>Renee I. Hansen</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <img src="vendors/images/img.jpg" alt="" />
+                                        <h3>Vicki M. Coleman</h3>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                                            elit, sed...
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div> *@
+            <div class="user-info-dropdown">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" style="padding-top: 10px;"
+                       href="#"
+                       role="button"
+                       data-toggle="dropdown">
+                        @{
+                            <span class="user-icon">
+                                <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                            </span>
+                            string username = HttpContextAccessor.HttpContext.Session.GetString("USERNAME");
+                            if (username != null)
+                            {
+                                <span class="user-name">@username</span>
+                            }
+                        }
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                        <a class="dropdown-item" href="/Manager/profile"><i class="dw dw-user1"></i> Hồ Sơ</a>
+                        <a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Cài Đặt</a>
+                        <a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Trợ Giúp</a>
+                        <a class="dropdown-item" href="/auth/logout"><i class="dw dw-logout"></i> Đăng Xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-side-bar">
+        <div class="brand-logo">
+            <a href="Home/Index">
+                <img src="vendors/images/deskapp-logo.svg" alt="" class="dark-logo" />
+                <img src="vendors/images/deskapp-logo-white.svg"
+                     alt=""
+                     class="light-logo" />
+            </a>
+            <div class="close-sidebar" data-toggle="left-sidebar-close">
+                <i class="ion-close-round"></i>
+            </div>
+        </div>
+        <div class="menu-block customscroll">
+            <div class="sidebar-menu">
+                <ul id="accordion-menu">
+                    <li>
+                        <a href="/home/index"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-house"></span>
+                            <span class="mtext">
+                                Trang Chủ
+                            </span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon bi bi-file-person-fill"></span><span class="mtext">Quản Lý</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/Manager/index">Danh Sách</a></li>
+                            <li><a href="/Manager/create">Tạo Mới</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon  bi bi-file-person"></span><span class="mtext">Nhân Viên</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/employee/index">Danh Sách</a></li>
+                            <li><a href="/employee/create">Tạo Mới</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/category/index"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-card-checklist"></span>
+                            <span class="mtext">
+                                Danh Mục
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                        <div class="sidebar-small-cap">Hỗ Trợ Khách Hàng</div>
+                    </li>
+                    <li>
+                        <a href="https://dropways.github.io/deskapp-free-single-page-website-template/"
+                           target="_blank"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-layout-text-window-reverse"></span>
+                            <span class="mtext">
+                                Chính Sách
+                                <img src="vendors/images/coming-soon.png" alt="" width="25" />
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://dropways.github.io/deskapp-free-single-page-website-template/"
+                           target="_blank"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-file-pdf"></span>
+                            <span class="mtext">
+                                Hướng Dẫn
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+
+    @RenderBody()
+    <base href="~/" />
+    <!-- js -->
+    <script src="vendors/scripts/core.js"></script>
+    <script src="vendors/scripts/script.min.js"></script>
+    <script src="vendors/scripts/process.js"></script>
+    <script src="vendors/scripts/layout-settings.js"></script>
+    <script src="src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+    <script src="src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+    <script src="vendors/scripts/steps-setting.js"></script>
+    <script src="~/signalr/dist/browser/signalr.js"></script>
+    <script src="~/Notification/notify.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,119 @@
+﻿@using Cosplane_API_ViewModel.Employee
+@model EmployeeViewModel
+
+<div class="min-height-200px">
+	<div class="page-header">
+		<div class="row">
+			<div class="col-md-12 col-sm-12">
+				<div class="title">
+					<h4>Quản Lý Quản Trị Viên</h4>
+				</div>
+				<nav aria-label="breadcrumb" role="navigation">
+					<ol class="breadcrumb">
+						<li class="breadcrumb-item">
+							<a href="index.html">Trang Chủ</a>
+						</li>
+						<li class="breadcrumb-item active" aria-current="page">
+							Thông tin cá nhân
+						</li>
+					</ol>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+
+		<div class="col-xl-12 col-lg-12 col-md-8 col-sm-12 mb-30 ">
+			<div class="pd-20 card-box ">
+
+				<div class="height-100-p overflow-hidden">
+					<div class="profile-tab height-100-p">
+						<div class="tab height-100-p">
+
+							<div class="tab-content">
+
+								<div class=""
+									 id="setting"
+									 role="tabpanel">
+									<div class="profile-setting">
+										<form asp-action="update" asp-controller="Admin" method="post">
+											<ul class="profile-edit-list row">
+												<li class="col-lg-3"></li>
+												<li class="weight = 50%, col-lg-6">
+													<h4 class="text-blue h5 mb-20" style="color:#000814">
+														Chỉnh sửa thông tin cá nhân
+													</h4>
+													
+													@* <div class="form-group">
+														<input type="hidden" asp-for="AccId" value="Model.AccId" />
+													</div> *@
+													<div class="form-group">
+														<label>Họ và Tên</label>
+														<input class="form-control form-control-lg"
+															   type="text"
+															   asp-for="Fullname" />
+													</div>
+
+													<div class="form-group">
+														<label>Email</label>
+														<input class="form-control form-control-lg"
+															   type="email"
+															   asp-for="Mail" />
+													</div>
+
+													<div class="form-group">
+														<label>Số điện thoại</label>
+														<input class="form-control form-control-lg OnlyNumber"
+															   type="text"
+															   asp-for="Phone" maxlength="10" size="10" />
+													</div>
+													<div class="form-group">
+														<label>Địa chỉ</label>
+														<textarea class="form-control"
+																  asp-for="Address"></textarea>
+													</div>
+											
+													<div class="form-group row">
+														<div class="col-2"></div>
+														<button type="submit" class="btn btn-success col-lg-2 col-sm-12 offset-lg-2">Tạo</button>
+														<a href="/Admin/Index" class="btn btn-primary col-lg-2 col-sm-12 offset-lg-1">Trở về</a>
+														<div class="col-2"></div>
+													</div>
+												</li>
+												<li class="col-lg-3"></li>
+											</ul>
+										</form>
+									</div>
+								</div>
+								<!-- Setting Tab End -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+
+	@if (ViewBag.Error != null)
+	{
+		<script>
+			$(function () {
+				toastr.error('@ViewBag.Error', 'Error Occurred!')
+			});
+		</script>
+
+	}
+	@if (ViewBag.Success != null)
+	{
+		<script>
+			$(function () {
+				toastr.success('@ViewBag.Success', 'Successful!')
+			});
+		</script>
+
+	}
+}

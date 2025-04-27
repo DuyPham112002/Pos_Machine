@@ -1,0 +1,132 @@
+﻿@using Client_ViewModel.Fingerprint
+
+@model GetBrowserInfoViewModel
+
+<div class="min-height-200px">
+    <div class="page-header background-blue">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="light-text">
+                    <h4 class="light-text"> Quản Lý Thiết Bị </h4>
+                </div>
+                <nav aria-label="breadcrumb" role="navigation">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a class="light-text" href="/">Trang Chủ</a>
+                        </li>
+                        <li class="breadcrumb-item active light-text" aria-current="page">
+                            Lấy Fingerprint
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" action="javascript:void(0);">
+      @*   <input type="hidden" asp-for="OS" id="OS" />
+        <input type="hidden" asp-for="OSVersion" id="OSVersion" />
+        <input type="hidden" asp-for="TimeZone" id="TimeZone" />
+        <input type="hidden" asp-for="AvailableResolution" id="AvailableResolution" />
+        <input type="hidden" asp-for="Language" id="Language" />
+        <input type="hidden" asp-for="DeviceVendor" id="DeviceVendor" />
+        <input type="hidden" asp-for="Browser" id="Browser" />
+        <input type="hidden" asp-for="BrowserVersion" id="BrowserVersion" />
+        <input type="hidden" asp-for="Engine" id="Engine" />
+        <input type="hidden" asp-for="Plugins" id="Plugins" /> *@
+
+        <div class="pd-20 card-box mb-30">
+            <div class="clearfix">
+                <div class="pull-left">
+                    <h4 class="dark-text h4">Lấy Fingerprint</h4>
+                    <p class="mb-30">Chỉ có tài khoản Admin mới có thể lấy Fingerprint</p>
+                </div>
+            </div>
+
+            <div class="pd-20 mb-30 d-flex justify-content-center">
+                <button type="button" onclick="getDeviceFingerprint()" class="btn btn-outline-success col-lg-2 col-sm-12">Lấy</button>
+            </div>
+
+            <div class="pd-20 mb-30 d-flex justify-content-center">
+                <input id="fingerprint" style="text-align: center" class="form-control col-lg-4 col-sm-12" disabled hidden>
+            </div>
+
+            <div class="pd-20 mb-30 d-flex justify-content-center">
+                <a href="/Home/Index" class="btn btn-primary col-lg-2 col-sm-12">Quay lại</a>
+            </div>
+        </div>
+    </form>
+</div>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        async function getDeviceFingerprint() {
+            var client = new ClientJS(); // Tạo đối tượng ClientJS
+
+            // document.getElementById('OS').value = client.getOS();
+            // document.getElementById('OSVersion').value = client.getOSVersion();
+            // document.getElementById('TimeZone').value = client.getTimeZone();
+            // document.getElementById('AvailableResolution').value = client.getAvailableResolution();
+            // document.getElementById('Language').value = client.getLanguage();
+            // document.getElementById('DeviceVendor').value = client.getDeviceVendor();
+            // document.getElementById('Browser').value = client.getBrowser();
+            // document.getElementById('BrowserVersion').value = client.getBrowserVersion();
+            // document.getElementById('Engine').value = client.getEngine();
+            // document.getElementById('Plugins').value = client.getPlugins().join(", ");
+            // Thu thập dữ liệu fingerprint từ các trường ẩn
+            const fingerprintData = {
+                OS : client.getOS(),
+                OSVersion : client.getOSVersion(),
+                TimeZone :client.getTimeZone(),
+                AvailableResolution : client.getAvailableResolution(),
+                Language : client.getLanguage(),
+                Browser : client.getBrowser(),
+                BrowserVersion: client.getBrowserVersion(),
+                Engine: client.getEngine(),
+                Plugins: client.getPlugins()
+            };
+
+            try {
+                const response = await fetch('/Device/Fingerprint/Create', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(fingerprintData)
+                });
+
+                const result = await response.json();
+                toastr.success("Lấy Fingerprint thành công");
+                var fingerprintInput = document.getElementById("fingerprint");
+                fingerprintInput.hidden = false;
+                fingerprintInput.value = "Mã Fingerprint: " + result;
+
+            } catch (error) {
+                toastr.error("Lỗi khi gửi fingerprint: " + error);
+            }
+
+            }
+
+        
+    </script>
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastr.error('@ViewBag.Error', 'Error Occurred!')
+            });
+        </script>
+    }
+
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastr.success('@ViewBag.Success', 'Successful!')
+            });
+        </script>
+    }
+}

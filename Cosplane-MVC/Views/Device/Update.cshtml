@@ -1,0 +1,105 @@
+﻿@using Cosplane_MVC_ViewModel.Device;
+
+@model GetBrandUpdateDeviceMVCViewModel
+
+<div class="min-height-200px">
+    <div class="page-header background-blue ">
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class=" light-text">
+                    <h4 class="light-text"> Quản Lý Thiết Bị </h4>
+                </div>
+                <nav aria-label="breadcrumb" role="navigation">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item ">
+                            <a class="light-text" href="/">Trang chủ</a>
+                        </li>
+                        <li class="breadcrumb-item active light-text" aria-current="page">
+                            Cập Nhật Thông Tin Thiết Bị
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="pd-20 card-box mb-30">
+        <div class="clearfix">
+            <div class="pull-left">
+                <h4 class="dark-text h4">
+                    Cập Nhật Thông Tin Thiết Bị
+                </h4>
+                <p class="mb-30">Chỉ có tài khoản Admin mới có thể cập nhật thông tin thiết bị</p>
+            </div>
+
+        </div>
+
+        <form asp-action="UpdateDevice" asp-controller="device" method="post">
+            <div class="form-group row">
+                <input type="hidden" asp-for=UpdateDevice.DeviceId value="@Model.UpdateDevice.DeviceId"></input>
+                <label class="col-sm-12 col-md-2">Chọn Mã Thương Hiệu</label>
+                <div class="col-sm-12 col-md-12">
+                    <select asp-for="UpdateDevice.BrandId" class="form-control">
+                        <option value="">-- Chọn thương hiệu --</option>
+                        @foreach (var brand in Model.GetAllBrandToUpdateModel)
+                        {
+                            if(Model.UpdateDevice.BrandId == brand.BrandId)
+                            {
+                                <option selected value="@brand.BrandId">@brand.BrandName</option>
+                            }
+                            else
+                            {
+                                <option value="@brand.BrandId">@brand.BrandName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-12 col-md-2">Nhập Fingerprint</label>
+                <div class="col-sm-12 col-md-12">
+                    <input class="form-control" asp-for="UpdateDevice.DeviceFingerPrint">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-2"></div>
+                <button type="submit" class="btn btn-success col-lg-2 col-sm-12 offset-lg-2">Cập Nhật</button>
+                <a href="/Device/@Model.UpdateDevice.BrandId" class="btn btn-primary col-lg-2 col-sm-12 offset-lg-1">Trở về</a>
+                <div class="col-2"></div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+
+
+                toastr.error('@ViewBag.Error', 'Error Occurred!')
+
+            });
+        </script>
+
+    }
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+
+
+                toastr.success('@ViewBag.Success', 'Successful!')
+
+            });
+        </script>
+
+    }
+}

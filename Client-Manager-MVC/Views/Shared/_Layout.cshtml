@@ -1,0 +1,328 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<html lang="en">
+<head>
+    <!-- Title -->
+    <title>Quản Lý Quán - SnapPOS</title>
+    <!-- Meta -->
+    <!-- Basic Page Info -->
+    <meta charset="utf-8" />
+    <base href="~/" />
+    <!-- Site favicon -->
+
+    <link rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="Brand/ico.png" />
+
+    <!-- Mobile Specific Metas -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet" />
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="~/vendors/styles/core.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="~/vendors/styles/icon-font.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="~/src/plugins/datatables/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet"
+          type="text/css"
+          href="~/src/plugins/datatables/css/responsive.bootstrap4.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/vendors/styles/style.css" />
+    <link rel="stylesheet" type="text/css" href="~/src/plugins/jquery-steps/jquery.steps.css" />
+    
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async
+            src="https://www.googletagmanager.com/gtag/js?id=G-GBZ3SGGX85"></script>
+    <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2973766580778258"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="~/notify/notify.css" rel="stylesheet">
+</head>
+<body>
+    <style>
+        .field-validation-error {
+            color: red !important;
+        }
+
+        .no-spinner {
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+            .no-spinner::-webkit-inner-spin-button,
+            .no-spinner::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+        .card-box h5 {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .profile-info li {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .dataTables_length {
+            margin-top: 20px;
+        }
+
+        .dataTables_filter {
+            margin-top: 10px;
+        }
+
+        .dataTables_filter {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center !important;
+        }
+
+        .flex-box {
+            display: flex !important;
+            justify-content: space-between;
+            align-items: center !important;
+        }
+
+        .txt-title {
+            max-width: 172px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .dt-buttons .btn {
+            margin-right: 5px;
+        }
+
+        #columnFilter {
+            margin-bottom: 10px;
+        }
+
+        .txt-overflow {
+            white-space: nowrap;
+        }
+
+        .chat-box .chat-desc ul, .pd-ltr-20 {
+            padding: 0 !important;
+        }
+
+        .page-header{
+            margin-bottom: 15px !important;
+        }
+    </style>
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon bi bi-list"></div>
+            <div class="search-toggle-icon bi bi-search"
+                 data-toggle="header_search"></div>
+            <div class="header-search">
+            </div>
+        </div>
+        <div class="header-right">
+           
+            <div class="user-info-dropdown">
+                <div class="dropdown">
+                    <a class="dropdown-toggle" style="padding-top: 10px;"
+                       href="#"
+                       role="button"
+                       data-toggle="dropdown">
+                        @{
+                            <span class="user-icon">
+                                <i class="fa fa-address-card-o" aria-hidden="true"></i>
+                            </span>
+                            string username = HttpContextAccessor.HttpContext.Session.GetString("USERNAME");
+                            if (username != null)
+                            {
+                                <span class="user-name">@username</span>
+                            }
+                        }
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+                        <a class="dropdown-item" href="/manager/profile"><i class="dw dw-user1"></i> Hồ Sơ</a>
+                        <a class="dropdown-item" href="/setting/index"><i class="dw dw-settings2"></i> Cài Đặt</a>
+                        <a class="dropdown-item" href="/auth/logout"><i class="dw dw-logout"></i> Đăng Xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-side-bar" style="background-color:#337BFF">
+        <div >
+            <a href="Home/Index">
+
+                <img style="padding-bottom:5px" src="Brand/Logo-blue.png" title="SnapPOS" alt="SnapPOS"
+                     class="light-logo" />
+            </a>
+            <div class="close-sidebar" data-toggle="left-sidebar-close">
+                <i class="ion-close-round"></i>
+            </div>
+        </div>
+        <div class="menu-block customscroll">
+            <div class="sidebar-menu">
+                <ul id="accordion-menu">
+                    <li>
+                        <a href="/home/index"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-house"></span>
+                            <span class="mtext">
+                                Trang Chủ
+                            </span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon bi bi-person-badge"></span><span class="mtext">TK Quản Lý</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/Manager/index">Danh Sách</a></li>
+                            <li><a href="/Manager/create">Tạo Mới</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                   
+                            <span class="micon  bi bi-person-workspace"></span><span class="mtext">TK Nhân Viên</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/employee/index">Danh Sách</a></li>
+                            <li><a href="/employee/create">Tạo Mới</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                           
+                            <span class="micon   bi bi-box2-heart"></span><span class="mtext">Danh Mục</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/category/index">Danh Mục Chính</a></li>
+                            <li><a href="/subcategory/index">Loại Sản Phẩm</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon  micon bi bi-cup-straw"></span><span class="mtext">Sản Phẩm</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/product/index">Danh Sách</a></li>
+                            <li><a href="/product/create">Tạo Mới</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon  icon-copy fa fa-calendar-o"></span><span class="mtext">Chấm công</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/attendance/index/">Danh sách chấm công</a></li>
+                            <li><a href="/attendance/create">Tạo mới chấm công</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon  icon-copy fa fa-drivers-license-o" aria-hidden="true"></span><span class="mtext">Quản Lý Ca</span>
+                        </a>
+                        <ul class="submenu">
+                            <li><a href="/Shift/index/">Danh Sách</a></li>
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a href="/menu/index"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-list-columns-reverse"></span>
+                            <span class="mtext">
+                                Menu
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/order/index"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-cart4"></span>
+                            <span class="mtext">
+                               Hóa Đơn
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="dropdown-divider"></div>
+                    </li>
+                   @*  <li>
+                        <div class="sidebar-small-cap">Hỗ Trợ Khách Hàng</div>
+                    </li>
+                    <li>
+                        <a href="https://dropways.github.io/deskapp-free-single-page-website-template/"
+                           target="_blank"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-layout-text-window-reverse"></span>
+                            <span class="mtext">
+                                Chính Sách
+                                <img src="vendors/images/coming-soon.png" alt="" width="25" />
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://dropways.github.io/deskapp-free-single-page-website-template/"
+                           target="_blank"
+                           class="dropdown-toggle no-arrow">
+                            <span class="micon bi bi-file-pdf"></span>
+                            <span class="mtext">
+                                Hướng Dẫn
+                            </span>
+                        </a>
+                    </li> *@
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu-overlay"></div>
+
+    @RenderBody()
+
+    <base href="~/" />
+    <!-- js -->
+    <script src="~/vendors/scripts/core.js"></script>
+    <script src="~/vendors/scripts/script.min.js"></script>
+    <script src="~/vendors/scripts/process.js"></script>
+    <script src="~/vendors/scripts/layout-settings.js"></script>
+    <script src="~/vendors/scripts/custominput.js"></script>
+    <script src="~/vendors/scripts/toastnotify.js"></script>
+    <script src="~/vendors/scripts//inputonlynumber.js"></script>
+    <script src="~/src/plugins/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/src/plugins/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/src/plugins/datatables/js/dataTables.responsive.min.js"></script>
+    <script src="~/src/plugins/datatables/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/src/plugins/jquery-steps/jquery.steps.js"></script>
+    
+
+    <!-- buttons for Export datatable -->
+    <script src="~/plugins/datatables/js/dataTables.buttons.min.js"></script>
+    <script src="~/plugins/datatables/js/buttons.bootstrap4.min.js"></script>
+    <script src="~/plugins/datatables/js/buttons.print.min.js"></script>
+    <script src="~/plugins/datatables/js/buttons.html5.min.js"></script>
+    <script src="~/plugins/datatables/js/buttons.flash.min.js"></script>
+    <script src="~/plugins/datatables/js/pdfmake.min.js"></script>
+    <script src="~/plugins/datatables/js/vfs_fonts.js"></script>
+    <!-- Datatable Setting js -->
+    <script src="~/script/datatable-setting.js"></script>
+
+    <script src="~/signalr/dist/browser/signalr.js"></script>
+    <script src="~/Notification/notify.js"></script>
+
+
+    <!--Custom validate-->
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

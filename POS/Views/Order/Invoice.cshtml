@@ -1,0 +1,272 @@
+﻿@using Client_ViewModel.Order
+@using Microsoft.AspNetCore.Html
+@{
+    Layout = "~/Views/Shared/_EmptyLayout.cshtml";
+}
+@model InvoiceOrderViewModel
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+    body {
+        font-family: Roboto;
+    }
+
+    .main-print{
+        display: flex;
+        justify-content: center;
+    }
+
+    .fmbody {
+        margin-top: 5px;
+        padding: 15px;
+        font-family: Roboto;
+        width: @(Model != null && Model.Setting != null ? $"{Model.Setting.Size}mm" : "58mm");
+    }
+
+        .fmbody table:first-child {
+            width: 100%;
+        }
+
+    .brand {
+        text-align: center;
+        font-size: 17px;
+        font-weight: 600;
+    }
+
+    .title {
+        font-size: 13px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .thank {
+        text-align: center;
+        font-size: 12.5px;
+        font-weight: 600;
+    }
+
+    .th {
+        text-align: left;
+        padding: 2.5px 2px 2.5px 0;
+        font-size: 9.5px;
+    }
+
+    .td {
+        font-size: 10px;
+    }
+
+    .product {
+        word-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+        max-width: 95px;
+    }
+
+    .tad {
+        font-size: 9px;
+    }
+
+    .num {
+        font-size: 10px;
+    }
+
+    .columns {
+        font-size: 10px;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    .mg-top {
+        margin-top: 10px;
+        margin-bottom: 0;
+    }
+
+
+    @@media print {
+        @@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        body {
+            font-family: Roboto;
+        }
+
+        .main-print {
+            display: block !important;
+        }
+
+        .fmbody {
+            width: 58mm;
+        }
+
+        .fmbody {
+            margin-top: 0;
+            padding: 10px;
+        }
+
+        .print-hide, .notifications {
+            display: none !important;
+        }
+    }
+</style>
+<div class="main-print">
+    <div class="fmbody">
+        <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="brand">
+                            <p class="text">@Model.Setting.BrandName</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-top: 15px;">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="tad text">Số HĐ: @Model.Order.Code</div></td>
+                                        <td><div class="tad text-right text">Ngày Tạo: @Model.Payment.CreatedOn.ToString("dd/MM/yyyy")</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="tad text">Giờ Vào: @Model.Order.CreatedOn.ToString("HH:mm")</div></td>
+                                        <td><div class="tad text-right text">Giờ Ra: @DateTime.Now.ToString("HH:mm")</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-top: 15px;">
+                            <p class="title text">Hóa Đơn Thanh Toán</p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-top: 15px;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th><div class="th text">STT</div></th>
+                                        <th><div class="th text">Sản Phẩm</div></th>
+                                        <th><div class="th text">Giá</div></th>
+                                        <th><div class="th text">SL</div></th>
+                                        <th><div class="th text">Tổng</div></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        if (Model.Orders != null)
+                                        {
+                                            int count = 1;
+                                            foreach (var item in Model.Orders)
+                                            {
+                                                HtmlString name = new HtmlString(item.ProductName.Replace("<br>", ""));
+                                                <tr>
+                                                    <td><div class="td">@count</div></td>
+                                                    <td><div class="td product text">@name</div></td>
+                                                    <td><div class="td">@item.Price.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))</div></td>
+                                                    <td><div class="td">@item.Quantity</div></td>
+                                                    <td><div class="td ">@item.SubTotal.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de"))</div></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div style="margin-top: 15px;">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><div class="td text-right text" style="font-weight: bold;"><span>Tổng Cộng:</span> @Model.Order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="td text-right text" style="font-weight: bold;"><span>Tiền Khách Đưa:</span> @Model.Payment.Received.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</div></td>
+                                    </tr>
+                                    <tr>
+                                        <td><div class="td text-right text" style="font-weight: bold;"><span>Tiền Trả Khách:</span> @Model.Payment.Changed.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</div></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="columns">
+                            <p class="mg-top title text">Hình Thức Thanh Toán</p>
+                            <p class="mg-top">● <span id="paymentmethodtext text"> @(Model.Payment.PaymentMethod == 1 ? " Thanh Toan Bang Tien Mat" : " Thanh Toan Chuyen Khoan")</span></p>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div>
+                            <div class="columns">
+                                <p class="mg-top title text">Thông Tin Liên Hệ</p>
+                                <p class="mg-top text">● @Model.Setting.Addrress</p>
+                                <p class="mg-top text">● Hotline: @Model.Setting.Hotline</p>
+                            </div>
+                            <br />
+                            <div class="thank">
+                                <span style="font-size: 11px; font-weight: 500; text-transform: none;">(WIFI: @Model.Setting.Wifi)</span>
+                                <p class="text"><i>Cảm ơn quý khách và hẹn gặp lại!</i></p>
+                            </div>
+                            <br />
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="print-hide" style="display: flex; justify-content: center;">
+    <button type="button" onclick="printfile()" class="btn btn-success" style="margin-right: 5px;">In HĐ</button>
+    <a type="button" href="order/detail/@Model.Order.Id" class="btn btn-primary">Trở Về</a>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var elements = document.querySelectorAll('.text');
+            elements.forEach((element) => {
+                var text = element.innerText;
+                var textWithoutAccents = text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                element.innerText = textWithoutAccents;
+            });
+        });
+
+        function printfile() {
+            window.print();
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

@@ -1,0 +1,297 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Hệ Thống Quản Lý - SnapPOS</title>
+	<!-- Meta -->
+	<!-- Basic Page Info -->
+	<meta charset="utf-8" />
+	<base href="~/" />
+	<!-- Site favicon -->
+
+	<link rel="icon"
+		  type="image/png"
+		  sizes="16x16"
+		  href="Brand/ico.png" />
+
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+		  rel="stylesheet" />
+	<!-- CSS -->
+	<link rel="stylesheet" type="text/css" href="~/vendors/styles/core.css" />
+	<link rel="stylesheet"
+		  type="text/css"
+		  href="~/vendors/styles/icon-font.min.css" />
+	<link rel="stylesheet"
+		  type="text/css"
+		  href="~/src/plugins/jvectormap/jquery-jvectormap-2.0.3.css" />
+	<link rel="stylesheet" type="text/css" href="~/vendors/styles/style.css" />
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+</head>
+<body>
+	<div class="header">
+		<div class="header-left">
+			<div class="menu-icon bi bi-list"></div>
+			<div class="search-toggle-icon bi bi-search"
+				 data-toggle="header_search"></div>
+			<div class="header-search">
+				<form>
+					<div class="form-group mb-0">
+						<i class="dw dw-search2 search-icon"></i>
+						<input type="text"
+							   class="form-control search-input"
+							   placeholder="Search Here" />
+						<div class="dropdown">
+							<a class="dropdown-toggle no-arrow"
+							   href="#"
+							   role="button"
+							   data-toggle="dropdown">
+								<i class="ion-arrow-down-c"></i>
+							</a>
+							<div class="dropdown-menu dropdown-menu-right">
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">From</label>
+									<div class="col-sm-12 col-md-10">
+										<input class="form-control form-control-sm form-control-line"
+											   type="text" />
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">To</label>
+									<div class="col-sm-12 col-md-10">
+										<input class="form-control form-control-sm form-control-line"
+											   type="text" />
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-12 col-md-2 col-form-label">Subject</label>
+									<div class="col-sm-12 col-md-10">
+										<input class="form-control form-control-sm form-control-line"
+											   type="text" />
+									</div>
+								</div>
+								<div class="text-right">
+									<button class="btn btn-primary">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="header-right">
+			<div class="dashboard-setting user-notification">
+				<div class="dropdown">
+					<a class="dropdown-toggle no-arrow"
+					   href="javascript:;"
+					   data-toggle="right-sidebar">
+						<i class="dw dw-settings2"></i>
+					</a>
+				</div>
+			</div>
+			<div class="user-notification">
+				<div class="dropdown">
+					<a class="dropdown-toggle no-arrow"
+					   href="#"
+					   role="button"
+					   data-toggle="dropdown">
+						<i class="icon-copy dw dw-notification"></i>
+						<span class="badge notification-active"></span>
+					</a>
+					<div class="dropdown-menu dropdown-menu-right">
+						<div class="notification-list mx-h-350 customscroll">
+							<ul>
+								<li>
+									<a href="#">
+										<img src="vendors/images/img.jpg" alt="" />
+										<h3>John Doe</h3>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipisicing
+											elit, sed...
+										</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="vendors/images/photo1.jpg" alt="" />
+										<h3>Lea R. Frith</h3>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipisicing
+											elit, sed...
+										</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="vendors/images/photo2.jpg" alt="" />
+										<h3>Erik L. Richards</h3>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipisicing
+											elit, sed...
+										</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="vendors/images/photo3.jpg" alt="" />
+										<h3>John Doe</h3>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipisicing
+											elit, sed...
+										</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="vendors/images/photo4.jpg" alt="" />
+										<h3>Renee I. Hansen</h3>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipisicing
+											elit, sed...
+										</p>
+									</a>
+								</li>
+								<li>
+									<a href="#">
+										<img src="vendors/images/img.jpg" alt="" />
+										<h3>Vicki M. Coleman</h3>
+										<p>
+											Lorem ipsum dolor sit amet, consectetur adipisicing
+											elit, sed...
+										</p>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="user-info-dropdown">
+				<div class="dropdown">
+					<a class="dropdown-toggle" style="padding-top: 10px;"
+					   href="#"
+					   role="button"
+					   data-toggle="dropdown">
+						@{
+							<span class="user-icon">
+								<i class="fa fa-address-card-o" aria-hidden="true"></i>
+							</span>
+							string username = HttpContextAccessor.HttpContext.Session.GetString("USERNAME");
+							if (username != null)
+							{
+								<span class="user-name">@username</span>
+							}
+						}
+					</a>
+					<div class="dropdown-menu dropdown-menu-right dropdown-menu-icon-list">
+						<a class="dropdown-item" href="/Admin/UpdateProfile"><i class="dw dw-user1"></i> Trang Cá Nhân</a>
+						<a class="dropdown-item" href="profile.html"><i class="dw dw-settings2"></i> Cài Đặt</a>
+						<a class="dropdown-item" href="faq.html"><i class="dw dw-help"></i> Trợ Giúp</a>
+						<a class="dropdown-item" href="/Auth/Logout"><i class="dw dw-logout"></i> Đăng Xuất</a>
+					</div>
+				</div>
+			</div>
+			<div class="github-link">
+				<a href="https://github.com/dropways/deskapp" target="_blank">
+					<img src="vendors/images/github.svg" alt="" />
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="left-side-bar" style="background-color:#337BFF">
+		<div >
+			<a href="/home/index">
+				<img style="padding-bottom:5px" src="Brand/Logo-blue.png"
+					 alt="SnapPOS" title="SnapPOS"
+					 class="light-logo" />
+			</a>
+			<div class="close-sidebar" data-toggle="left-sidebar-close">
+				<i class="ion-close-round"></i>
+			</div>
+		</div>
+		<div class="menu-block customscroll">
+			<div class="sidebar-menu">
+				<ul id="accordion-menu">
+					<li class="dropdown">
+						<a href="/Home/Index" class="dropdown-toggle  no-arrow">
+							<span class="micon bi bi-house-door-fill"></span><span class="mtext">Bảng Điều Khiển</span>
+						</a>
+					
+					</li>
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+				
+							<span class="micon bi bi-people-fill"></span><span class="mtext">Tài Khoản Admin</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="/Admin/create">Tạo Mới</a></li>
+							<li><a href="/Admin/Index">Danh Sách</a></li>
+						</ul>
+					</li>
+					@* brand function of admin*@
+ 					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon ion-android-star-half"></span><span class="mtext">Thương Hiệu</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="/brand/create">Tạo Mới</a></li>
+							<li><a href="/brand">Danh Sách</a></li>
+						</ul>
+					</li>
+					@* device function of admin*@
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+                            <span class="micon bi bi-device-hdd-fill"></span><span class="mtext">Thiết Bị</span>
+						</a>
+						<ul class="submenu">
+							<li><a href="/Device/create">Tạo Mới</a></li>
+							<li><a href="/Device/Brand">Danh Sách</a></li>
+						</ul>
+					</li>
+					@* fingerprint function of admin*@
+					<li class="dropdown">
+						<a href="javascript:;" class="dropdown-toggle">
+							<span class="micon bi bi-shield-lock-fill"></span><span class="mtext">Bảo Mật</span>
+						</a>
+
+						<ul class="submenu">
+							<li><a href="/Device/Fingerprint">Lấy fingerprint thiết bị</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="mobile-menu-overlay"></div>
+	<div class="main-container">
+		@RenderBody()
+		</div>
+	<!-- Nhúng thư viện ClientJS -->
+	<script src="https://cdn.jsdelivr.net/npm/clientjs@0.2.1/dist/client.min.js"></script>
+	
+	<script src="~/vendors/scripts/core.js"></script>
+	<script src="~/vendors/scripts/script.min.js"></script>
+	<script src="~/vendors/scripts/process.js"></script>
+	<script src="~/vendors/scripts/layout-settings.js"></script>
+	<script src="~/vendors/scripts/inputonlynumber.js"></script>
+	<script src="~/src/plugins/jQuery-Knob-master/jquery.knob.min.js"></script>
+	<script src="~/src/plugins/highcharts-6.0.7/code/highcharts.js"></script>
+	<script src="~/src/plugins/highcharts-6.0.7/code/highcharts-more.js"></script>
+	<script src="~/src/plugins/jvectormap/jquery-jvectormap-2.0.3.min.js"></script>
+	<script src="~/src/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+	<script src="~/vendors/scripts/dashboard2.js"></script>
+
+
+	<!-- bootstrap-touchspin js -->
+	<script src="~/plugins/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
+	<script src="~/signalr/dist/browser/signalr.js"></script>
+	<script src="~/Notification/notify.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

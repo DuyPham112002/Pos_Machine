@@ -1,0 +1,223 @@
+﻿@using Client_ViewModel.Shift
+@model DetailShiftViewModel
+<style>
+    #dataTable_filter{
+        display: flex !important;
+        justify-content: flex-end;
+    }
+</style>
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+         @*    <div class="invoice-wrap"> *@
+            <div class="pd-20 card-box mb-30">
+
+                <h3 class="text-center mb-30 weight-600 font-weight-bold">BÁO CÁO CA</h3>
+                    <div class="row pb-30">
+                        <div class="col-md-6">
+
+                            <p class="font-14 mb-5">
+                                Số Tiền Ban Đầu: <strong class="weight-600"><span> @Model.shift.BeginAmount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span></strong>
+                            </p>
+                            <p class="font-14 mb-5">
+                                Thời Gian Bắt Đầu Ca: <strong class="weight-600">@Model.shift.TimeStart.ToString("HH:mm:ss dd/MM/yyyy")</strong>
+                            </p>
+                            <p class="font-14 mb-5">
+                                Số Tiền Tạm Tính: <strong class="weight-600"><span> @Model.shift.provisional.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span> </strong>
+                            </p>
+                            <p class="font-14 mb-5">
+                                Số Tiền Hiện Tại: <strong class="weight-600"><span> @Model.shift.CurrentAmount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span> </strong>
+                            </p>
+                        </div>
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4>Hóa Đơn</h4>
+                            <table id="dataTable" class="table data-table hover display nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Thời gian</th>
+                                        <th>Số lượng</th>
+                                        <th>Tổng</th>
+                                        <th>Trạng thái</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    @if (Model.order != null)
+                                {
+                                    int count = 1;
+                                    @foreach (var order in Model.order)
+                                        {
+                                       
+                                        <tr>
+                                            <td>@count</td>
+                                                <td>@order.CreatedOn.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                                <td>@order.Quantity</td>
+                                                <td><strong><span> @order.Total.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span></strong></td>
+                                                @if (order.Status == 2 && order.ShiftId == @Model.shift.Id)
+                                                {
+                                                    <td><span class="badge badge-success">Đã thanh toán</span></td>
+                                                }
+                                                else
+                                                {
+                                                    <td><span class="badge badge-danger">Chưa thanh toán</span></td>
+                                                }
+                                            </tr>
+                                            count++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                           Không có đơn hàng nào
+                                        </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                        <h3 class="text-center font-weight-bold">PHÁT SINH</h3>
+                        <div class="invoice-header">                           
+                                <a class="btn btn-success" href="/Incurred/Index">Thêm <span><i class="fa-solid fa-plus"></i></span></a>
+                        </div>
+
+                        <table id="dataTable" class="table data-table hover display nowrap">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Số tiền</th>
+                                        <th>Lý Do</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                    @if (Model.incurred != null && Model.incurred.Count() > 0)
+                                    {
+                                    int countIn = 1;
+                                    foreach (var inc in Model.incurred)
+                                        {
+                                            <tr>
+                                                <td>@countIn</td>
+                                                <td>@inc.Title</td>
+                                                <td><strong><span> @inc.Amount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span></strong></td>
+                                                <td>@inc.Description</td>
+                                        </tr>
+                                        countIn++;
+                                    }
+                                    }
+                                    else
+                                    {
+                                        <tr>Chưa có thông tin phát sinh</tr>
+
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12"></div>
+                    </div>
+
+
+                    <div class="form-group row">
+                        <div class="col-lg-3 col-sm-0 col-md-0"></div>
+                        <button type="submit" class="btn btn-success col-lg-6 col-sm-12" onclick="deletePress('@Model.shift.Id')">Kết thúc ca làm việc</button>
+                        <div class="col-lg-3 col-sm-0 col-md-0"></div>
+                    </div>
+                </div>
+           @*  </div> *@
+        </div>
+
+    </div>
+    <!-- Activate Confirmation Modal -->
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chốt ca</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Xác nhận: <b id="activeAdmin"></b> Bạn có chắc sẽ kết thúc ca làm việc ?
+
+                    <h5 class="text-center mb-30 weight-600" style="margin: 15px 0 15px 0;">Tổng kết</h5>
+                    <div class="row pb-30">
+                        <div class="col-md-12">
+
+                            <p class="font-14 mb-5">
+                                <b>Số tiền ban đầu: </b> <span> @Model.shift.BeginAmount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span>
+                            </p>
+                            <p class="font-14 mb-5">
+                                <b>Thời gian bắt đầu ca: </b>  <span> @Model.shift.TimeStart.ToString("dd/MM/yyyy HH:mm")</span>
+                            </p>
+                            <p class="font-14 mb-5">
+                                <b> Số tiền hiện tại: </b>  <span> @Model.shift.CurrentAmount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <form asp-action="EndShift" asp-controller="Shift" method="post" style="display:inline; ">
+                        <input type="hidden" name="shiftId" id="deleteAccId" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-success">Kết thúc ca làm việc</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul id="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        function activatePress(accId, name) {
+            document.getElementById("activeAdmin").innerHTML = name;
+            document.getElementById("activateAccId").value = accId;
+            $('#activateModal').modal('show');
+        }
+
+
+        function deletePress(id) {
+            document.getElementById("deleteAccId").value = id;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+    
+
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

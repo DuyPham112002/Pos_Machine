@@ -1,0 +1,214 @@
+﻿@using Cosplane_API_ViewModel.Brand
+@{
+}
+@model List<GetAllBrandAPIViewModel>
+
+<style>
+    .table td {
+        max-width: 150px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+        .table td.action-cell {
+            overflow: visible;
+            white-space: normal;
+        }
+
+    .modal .modal-body {
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .modal .modal-content {
+        max-width: 500px;
+        overflow-wrap: break-word;
+    }
+
+    .modal .modal-title {
+        overflow-wrap: break-word;
+    }
+</style>
+
+<div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+        <div class="page-header background-blue ">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class=" light-text">
+                        <h4 class="light-text"> Quản Lý Thương Hiệu </h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item ">
+                                <a class="light-text" href="/">Trang chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active light-text" aria-current="page">
+                                Danh Sách Thương Hiệu
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+        <!-- Simple Datatable start -->
+        <div class="card-box mb-30 ">
+            <div class="pd-20">
+                <h4 class=" h4">
+                    Danh sách Thương Hiệu
+                </h4>
+                <p class="mb-30">Danh sách tất cả các thương hiệu của bạn</p>
+            </div>
+            <div class="pb-20">
+                <table class="table data-table-export hover">
+                    <thead>
+                        <tr>
+                            <th class="table-plus datatable-nosort">#</th>
+                            <th>Tên thương hiệu</th>
+                            <th>Người tạo</th>
+                            <th>Trạng thái</th>
+                            <th class="datatable-nosort">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            int count = 1;
+                            foreach (var brand in Model)
+                            {
+                                <tr>
+                                    <td><p class="text-blue">@count</p></td>
+                                    <td>@brand.BrandName</td>
+                                    <td>@brand.CreatorId</td>
+                                    @if (brand.IsActivate)
+                                    {
+                                        <td>
+                                            <span class="badge badge-pill active-badge">
+                                                <i style="color:green" class="icon-copy bi bi-record-fill"></i> Đang Kích Hoạt
+                                            </span>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <span class="badge badge-pill deactivated-badge">
+                                                <i class="icon-copy bi bi-record"></i> Không Kích Hoạt
+                                            </span>
+                                        </td>
+                                    }
+                                    <td class="action-cell">
+                                        <div class="dropdown ">
+                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu  dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+
+                                                <a class="dropdown-item" id="blue-dropdown" href="/Brand/Detail/@brand.BrandId"><i class="icon-copy bi bi-info-circle"></i> Chi tiết</a>
+
+                                                <a class="dropdown-item" id="navy-dropdown" href="/Brand/Update/@brand.BrandId"><i class="icon-copy bi bi-tools"></i> Cập nhật</a>
+                                                @if (@brand.IsActivate)
+                                                {
+                                                    <!-- Thay đổi ở đây: gọi hàm deletePress -->
+                                                    <a class="dropdown-item" id="danger-dropdown" href="javascript:void(0);" onclick="deletePress('@brand.BrandId', '@brand.BrandName')">
+                                                        <i class="icon-copy bi bi-stop-circle"></i> Xóa
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <!-- Thay đổi ở đây: gọi hàm activatePress -->
+                                                    <a class="dropdown-item" id="green-dropdown" href="javascript:void(0);" onclick="activatePress('@brand.BrandId', '@brand.BrandName')">
+                                                        <i class="icon-copy bi bi-play-circle"></i> Khôi phục
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                count++;
+                            }
+                        }
+                        else
+                        {
+                            <tr><td>Không tồn tại bất cứ thương hiệu nào</td></tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Simple Datatable End -->
+    </div>
+</div>
+
+<!-- Activate Confirmation Modal -->
+<div class="modal fade" id="activateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Activate Brand Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to activate: <b id="activeBrand"></b>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <a id="activateBrandId" class="btn btn-success" href="">Kích hoạt</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Brand Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete: <b id="deleteBrand"></b>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <a id="deleteBrandId" class="btn btn-danger" href="">Xóa</a>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script>
+        function activatePress(brandId, name) {
+            document.getElementById("activeBrand").innerHTML = name;
+            document.getElementById("activateBrandId").href = "/Brand/Activate/" + brandId;
+            $('#activateModal').modal('show');
+        }
+
+        function deletePress(brandId, name) {
+            document.getElementById("deleteBrand").innerHTML = name;
+            document.getElementById("deleteBrandId").href = "/Brand/Delete/" + brandId;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            toastr.error('@ViewBag.Error', 'Error Occurred!');
+        </script>
+    }
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            toastr.success('@ViewBag.Success', 'Successful!');
+        </script>
+    }
+}

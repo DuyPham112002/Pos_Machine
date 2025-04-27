@@ -1,0 +1,80 @@
+﻿@using Cosplane_API_ViewModel.Brand
+@model List<GetAllBrandAPIViewModel>
+
+<div class="pd-ltr-20 xs-pd-20-10">
+    <div class="min-height-200px">
+        <div class="page-header background-blue">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="light-text">
+                        <h4 class="light-text"> Quản Lý Thiết Bị </h4>
+                    </div>
+                    <nav aria-label="breadcrumb" role="navigation">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a class="light-text" href="/">Trang Chủ</a>
+                            </li>
+                            <li class="breadcrumb-item active light-text" aria-current="page">
+                                Danh Sách Thiết Bị Theo Thương Hiệu
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Danh sách thương hiệu dưới dạng buttons -->
+        <div class="card-box mb-30">
+            <div class="pd-20">
+                <h4 class="h4">Danh Sách Thiết Bị Theo Thương Hiệu</h4>
+                <p class="mb-30">Chọn thương hiệu để xem thiết bị</p>
+            </div>
+            <div class="pb-20 d-flex justify-content-center">
+                <div class="col-md-12">
+                    <h6 class="mb-20 d-flex justify-content-center">Tên Thương Hiệu (Tổng số: @Model.Count)</h6>
+                    <div class="list-group">
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            int count = 1;
+                            foreach (var brand in Model)
+                            {
+                                <button type="button"
+                                        class="list-group-item list-group-item-action brand-button"
+                                        onclick="window.location.href='/Device/@brand.BrandId'">
+                                    @count. [@brand.BrandName]
+                                </button>
+                                count++;
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-danger">Không tồn tại bất cứ thương hiệu nào</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="notification-list"></ul>
+
+<style>
+    .brand-button:hover {
+        background-color: #007bff;
+        color: white; 
+    }
+</style>
+
+@section Scripts {
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            toastr.error('@ViewBag.Error', 'Error Occurred!');
+        </script>
+    }
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            toastr.success('@ViewBag.Success', 'Successful!');
+        </script>
+    }
+}

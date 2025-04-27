@@ -1,0 +1,274 @@
+﻿@using Client_ViewModel.SubCategory
+@model MainSubcategoryViewModel
+
+<style>
+    .dropdown-item i {
+        margin-right: 10px;
+    }
+
+    .modal-body {
+        overflow: auto !important;
+    }
+</style>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header background-blue">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Loại Sản Phẩm</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Danh Sách
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Simple Datatable start -->
+            <div class="card-box mb-30">
+                <div style="padding: 20px 20px 0 20px;">
+                    <div style="text-align: right;">
+                        <button type="button" id="btn-create" class="btn btn-success" data-toggle="modal" data-target="#createModel">Thêm Mới</button>
+                    </div>
+                </div>
+                <div class="pd-20">
+                    <h4 class="h4">Danh Sách Loại Sản Phẩm</h4>
+                </div>
+                <div class="pb-20">
+                    <table class="table data-table-group hover display nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Danh Mục</th>
+                                <th>Loại Sản Phẩm</th>
+                                <th>Ngày Tạo</th>
+                                <th>Người Tạo</th>
+                                <th>Trạng Thái</th>
+                                <th class="datatable-nosort">Tùy Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.SubCategories != null && Model.SubCategories.Count() > 0)
+                            {
+                                foreach (var subcategory in Model.SubCategories)
+                                {
+                                    <tr>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subcategory.CategoryName">
+                                            <div class="txt-title">
+                                                @subcategory.CategoryName
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subcategory.Name">
+                                            <div class="txt-title">
+                                                @subcategory.Name
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subcategory.CreatedOn.ToString("dd/MM/yyyy")">
+                                            <div class="txt-title">
+                                                @subcategory.CreatedOn.ToString("dd/MM/yyyy")
+                                            </div>
+                                        </td>
+                                        <td data-toggle="tooltip" data-placement="top" title="@subcategory.CreatedBy">
+                                            <div class="txt-title">
+                                                @subcategory.CreatedBy
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (subcategory.IsActive)
+                                            {
+                                                <span class="badge badge-pill active-badge" style="padding: 0;font-size: 12px;">
+                                                    <i style="color:green" class="icon-copy bi bi-record-fill"></i> Hoạt Động
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-pill deactivated-badge" style="padding: 0;font-size: 12px;">
+                                                    <i class="icon-copy bi bi-record"></i> Ngừng Hoạt Động
+                                                </span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding: 0;">
+                                                    Tùy Chọn
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                                    <a class="dropdown-item" href="/SubCategory/Detail/@subcategory.Id">
+                                                        <i class="icon-copy bi bi-info-circle"></i> Chi Tiết
+                                                    </a>
+                                                    @if (subcategory.IsActive)
+                                                    {
+                                                        <button class="dropdown-item" onclick="deletePress('@subcategory.Id','@subcategory.Name')">
+                                                            <i class="icon-copy bi bi-trash2"></i> Ngưng Hoạt Động
+                                                        </button>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="dropdown-item" onclick="activatePress('@subcategory.Id','@subcategory.Name')">
+                                                            <i class="icon-copy bi bi-check-circle"></i> Hoạt Động
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr><td colspan="8">Không Có Loại Sản Phẩm Nào Được Tìm Thấy</td></tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Create Modal -->
+    <div class="modal fade" id="createModel" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tạo loại sản phẩm</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form asp-action="CreateSub" asp-controller="SubCategory" method="post" style="display:inline;">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Danh Mục :</label>
+                                    <select asp-for="CreateSubCategoryViewModel.CategoryId" class="gender custom-select form-control" id="categorySelect">
+                                        <option value="" data-display="Select" style="pointer-events: none;">Chọn Danh Mục Sản Phẩm</option>
+                                        @{
+                                            if (Model.Categories != null && Model.Categories.Count() > 0)
+                                            {
+                                                foreach (var item in Model.Categories)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="CreateSubCategoryViewModel.CategoryId"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Tên loại sản phẩm* :</label>
+                                    <input type="text" class="form-control username" asp-for="CreateSubCategoryViewModel.Name" maxlength="100" />
+                                    <span asp-validation-for="CreateSubCategoryViewModel.Name"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-success">Xác Nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Activate Confirmation Modal -->
+    <div class="modal fade" id="activateModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập Nhật Trạng Thái</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Xác nhận: Loại sản phẩm <b id="activeAdmin"></b> hoạt động trở lại?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    <form asp-action="UpdateSubActive" asp-controller="SubCategory" method="post" style="display:inline;">
+                        <input type="hidden" name="subCategoryId" id="activateAccId" />
+                        <button type="submit" class="btn btn-success">Hoạt Động</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true" style="top: 0;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Cập Nhật Trạng Thái</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Xác nhận: Loại sản phẩm <b id="adminUnActive"></b> sẽ ngưng hoạt động ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+                    <form asp-action="UpdateSubActive" asp-controller="SubCategory" method="post" style="display:inline;">
+                        <input type="hidden" name="subCategoryId" id="deleteAccId" />
+                        <button type="submit" class="btn btn-danger">Ngưng Hoạt Động</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+
+@section Scripts {
+    <script>
+        function activatePress(subId, name) {
+            document.getElementById("activeAdmin").innerHTML = name;
+            document.getElementById("activateAccId").value = subId;
+            $('#activateModal').modal('show');
+        }
+
+        function deletePress(subId, name) {
+            document.getElementById("adminUnActive").innerHTML = name;
+            document.getElementById("deleteAccId").value = subId;
+            $('#deleteModal').modal('show');
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        if (ViewBag.Error == "Vui lòng kiểm tra lại các thông tin đã nhập" && ViewData["ModelID"] != null)
+        {
+            <script>
+                $(function () {
+                    $('@ViewData["ModelID"]').modal('show');
+                });
+            </script>
+        }
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

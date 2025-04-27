@@ -1,0 +1,416 @@
+﻿@using Client_DBAccess.Entities
+@using Client_DBAccess.UnitOfWork
+@using Client_Manager_Services.SubCategoryService
+@using Client_ViewModel.Product;
+@using Client_ViewModel.SubCategory
+@model CreateProductViewModel
+
+<style>
+    .wizard-custom,
+    .wizard-custom .nav-tabs,
+    .wizard-custom .nav-tabs .nav-item {
+        position: relative;
+    }
+
+        .wizard-custom .nav-tabs:after {
+            content: "";
+            width: 80%;
+            border-bottom: solid 2px #ccc;
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            top: 38%;
+            z-index: -1;
+        }
+
+        .wizard-custom .nav-tabs .nav-item .nav-link {
+            width: 70px;
+            height: 70px;
+            margin-bottom: 6%;
+            background: white;
+            border: 2px solid #ccc;
+            color: #ccc;
+            z-index: 10;
+        }
+
+            .wizard-custom .nav-tabs .nav-item .nav-link:hover {
+                color: #333;
+                border: 2px solid #333;
+            }
+
+            .wizard-custom .nav-tabs .nav-item .nav-link.active {
+                background: #fff;
+                border: 2px solid #0dcaf0;
+                color: #0dcaf0;
+            }
+
+            .wizard-custom .nav-tabs .nav-item .nav-link:after {
+                content: " ";
+                position: absolute;
+                left: 50%;
+                transform: translate(-50%);
+                opacity: 0;
+                margin: 0 auto;
+                bottom: 0px;
+                border: 5px solid transparent;
+                border-bottom-color: #0dcaf0;
+                transition: 0.1s ease-in-out;
+            }
+
+    .nav-tabs .nav-item .nav-link.active:after {
+        content: " ";
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+        opacity: 1;
+        margin: 0 auto;
+        bottom: 0px;
+        border: 10px solid transparent;
+        border-bottom-color: #0dcaf0;
+    }
+
+    .wizard-custom .nav-tabs .nav-item .nav-link svg {
+        font-size: 25px;
+    }
+
+    #banner-attribute {
+        display: none;
+    }
+</style>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="title">
+                            <h4>Sản Phẩm</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    Tạo Mới
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-md-6 col-sm-12 text-right">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pd-20 card-box mb-30">
+                <div class="clearfix">
+                    <p class="mb-30">Ngày Tạo: @DateTime.Now.ToString("dd/MM/yyyy")</p>
+                </div>
+                <form asp-action="Create" asp-controller="Product" method="post" enctype="multipart/form-data">
+                    <div class="container">
+                        <div class="wizard-custom my-5">
+                            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                                <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top" title="Thông Tin Sản Phẩm">
+                                    <a class="nav-link active rounded-circle mx-auto d-flex align-items-center justify-content-center" href="#step3" id="step3-tab" data-bs-toggle="tab" role="tab" aria-controls="step3" aria-selected="true" title="Step 3" style="pointer-events: none;">
+                                        <i class="fas fa-brands fa-product-hunt"></i>
+                                    </a>
+                                </li>
+                                <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top" title="Hình Ảnh Sản Phẩm">
+                                    <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center" href="#step4" id="step4-tab" data-bs-toggle="tab" role="tab" aria-controls="step4" aria-selected="false" title="Step 4" style="pointer-events: none;">
+                                        <i class="fas fa-solid fa-camera-retro"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="myTabContent">
+                                <div class="step3-tab tab-pane fade show active" role="tabpanel" id="step3" aria-labelledby="step3-tab">
+                                    <br />
+                                    <h5>Thông Tin Sản Phẩm</h5>
+                                    <br />
+                                    <!-- Step 1 -->
+                                    <section class="personal-info">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Danh Mục Sản Phẩm* :</label>
+                                                    <select asp-for="CreateProduct.CategoryId" class="gender custom-select form-control" id="categorySelect">
+                                                        <option value="" data-display="Select" style="pointer-events: none;">Chọn Danh Mục Sản Phẩm</option>
+                                                        @{
+                                                            if (Model.Categories != null && Model.Categories.Count() > 0)
+                                                            {
+                                                                foreach (var item in Model.Categories)
+                                                                {
+                                                                    <option value="@item.Id">@item.Name</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                    <span asp-validation-for="CreateProduct.CategoryId"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Loại Sản Phẩm* :</label>
+                                                    <select asp-for="CreateProduct.SubCategoryId" class="gender custom-select form-control" id="subCategorySelect">
+                                                        <option value="" data-display="Select" style="pointer-events: none;">Chọn Loại Sản Phẩm</option>
+                                                        @{
+                                                            if (Model.SubCategories != null && Model.SubCategories.Count() > 0 && Model.CreateProduct != null && !string.IsNullOrEmpty(Model.CreateProduct.SubCategoryId))
+                                                            {
+                                                                foreach (var item in Model.SubCategories)
+                                                                {
+                                                                    <option value="@item.Id">@item.Name</option>
+                                                                }
+                                                            }
+                                                        }
+                                                    </select>
+                                                    <span asp-validation-for="CreateProduct.SubCategoryId"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Tên Sản Phẩm* :</label>
+                                                    <input type="text" class="form-control full-name" asp-for="CreateProduct.Name" maxlength="100" />
+                                                    <span asp-validation-for="CreateProduct.Name"></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group" id="price-default">
+                                                    <label>Giá Tiền* :</label>
+                                                    <input type="text" class="form-control vndInput no-spinner" asp-for="CreateProduct.Price" />
+                                                    <span asp-validation-for="CreateProduct.Price"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+                                                <label>Phân loại giá trị sản phẩm* :</label>
+                                                <div class="custom-control custom-radio mb-5">
+                                                    <input type="radio" id="customRadio1" name="CreateProduct.IsRequiredAttribute" class="custom-control-input" value="1"
+                                                    @(Model.CreateProduct.IsRequiredAttribute == 1 ? "checked" : "")
+                                                           onchange="displayBanner(1)">
+                                                    <label class="custom-control-label" for="customRadio1">Theo Mặc Định Sản Phẩm</label>
+                                                    <br>
+                                                    <i style="font-size: 12px;">(Sản phẩm sẽ được tính tiền theo giá trị mặc định)</i>
+                                                </div>
+
+                                                <div class="custom-control custom-radio mb-5">
+                                                    <input type="radio" id="customRadio2" name="CreateProduct.IsRequiredAttribute" class="custom-control-input" value="2"
+                                                    @(Model.CreateProduct.IsRequiredAttribute == 2 ? "checked" : "")
+                                                           onchange="displayBanner(2)">
+                                                    <label class="custom-control-label" for="customRadio2">Theo Phân Loại Sản Phẩm</label>
+                                                    <br>
+                                                    <i style="font-size: 12px;">(Sản phẩm sẽ được tính tiền theo giá trị phân loại)</i>
+                                                </div>
+
+                                                <span asp-validation-for="@Model.CreateProduct.IsRequiredAttribute"></span>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <div id="banner-attribute">
+                                                    <table style="width: 100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><div style="margin-bottom: 10px; font-weight: 500; font-size: 15px;">Phân Loại* :</div></th>
+                                                                <th><div style="margin-bottom: 10px; padding-left: 15px; font-weight: 500; font-size: 15px;">Giá Tiền* :</div></th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="table-attribute">
+                                                            @{
+                                                                for (int i = 0; i < Model.CreateAttribute.Attributes.Count; i++)
+                                                                {
+                                                                    <tr id="@($"tr-{i}")" style="@(Model.CreateAttribute.Attributes[i].IsDeleted ? "display: none;":"")">
+                                                                        <td>
+                                                                            <input name="CreateAttribute.Attributes[@i].IsDeleted" value="@(Model.CreateAttribute.Attributes[i].IsDeleted ? "true" : "false")" type="hidden" />
+                                                                            <div class="form-group">                  
+                                                                                <input type="text" class="form-control" name="CreateAttribute.Attributes[@i].Name" value="@Model.CreateAttribute.Attributes[i].Name">
+                                                                                <span class="txt-overflow" asp-validation-for="CreateAttribute.Attributes[i].Name"></span>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group" style="padding-left: 15px;">
+                                                                                <input type="text" class="form-control vndInput" name="CreateAttribute.Attributes[@i].Price" value="@Model.CreateAttribute.Attributes[i].Price">
+                                                                                <span class="txt-overflow" asp-validation-for="CreateAttribute.Attributes[i].Price"></span>
+                                                                            </div>
+                                                                        </td>
+                                                                        <td>
+                                                                            <div class="form-group" style="padding-left: 15px;">
+                                                                                <button type="button" class="btn btn-danger" onclick="removeElementById('tr-@i', @i)">
+                                                                                    <i class="bi bi-x-octagon" style="color: #FFFFFF;"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                    <span asp-validation-for="@Model.CreateAttribute.Attributes"></span>
+                                                    <div style="display: flex; justify-content: flex-end;">
+                                                        <button type="button" class="btn btn-primary" onclick="addAttribute()">
+                                                            <i class="bi bi-plus-circle-dotted" style="color: #FFFFFF;"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>Mô Tả Sản Phẩm :</label>
+                                                    <textarea asp-for="CreateProduct.Description" rows="2" class="form-control" maxlength="500"></textarea>
+                                                    <span asp-validation-for="CreateProduct.Description"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-primary next" style="color: #FFFFFF;">Tiếp Theo <i class="fas fa-angle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade step4-tab" role="tabpanel" id="step4" aria-labelledby="step4tab">
+                                    <br />
+                                    <h5>Tải Hình Ảnh Sản Phẩm</h5>
+                                    <br />
+                                    <!-- Step 2 -->
+                                    <section>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <input type="file" class="form-control" maxlength="1" asp-for="Image.Images" />
+                                                <span asp-validation-for="Image"></span>
+                                                <span asp-validation-for="Image.Images"></span>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <br />
+                                    <div class="d-flex justify-content-end">
+                                        <a class="btn btn-primary previous" style="margin-right: 20px;color: #FFFFFF;"><i class="fas fa-angle-left"></i> Trở về </a>
+                                        <button class="btn btn-success" type="submit">Tạo Mới</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    <script src="vendors/scripts/steps-setting.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#categorySelect').change(function () {
+                console.log('test');
+                var categoryId = $(this).val();
+                if (categoryId) {
+                    $.ajax({
+                        url: '@Url.Action("GetSubCategories", "SubCategory")',
+                        type: 'GET',
+                        data: { categoryId: categoryId },
+                        success: function (data) {
+                            $('#subCategorySelect').empty();
+                            if (data && data.length > 0) {
+                                $('#subCategorySelect').append('<option value="">Chọn Loại Sản Phẩm</option>');
+                            }
+                            $.each(data, function (i, item) {
+                                $('#subCategorySelect').append('<option value="' + item.id + '">' + item.name + '</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#subCategorySelect').empty().append('<option value="">Chọn Loại Sản Phẩm</option>');
+                }
+            });
+        });
+
+        function displayBanner(type) {
+            var div = document.getElementById("banner-attribute");
+            var defaultDiv = document.getElementById("price-default");
+            if (div != null && defaultDiv != null) {
+                var inputElement = defaultDiv.querySelector("input");
+                if (type == 2) {
+                    div.style.display = "block";
+                    inputElement.setAttribute("readonly", "true");
+                } else {
+                    div.style.display = "none";
+                    inputElement.removeAttribute("readonly")
+                }
+                inputElement.value = 0;
+            }
+        }
+
+        let attributeCount = @Model.CreateAttribute.Attributes.Count;
+        function addAttribute() {
+            var tbody = document.getElementById("table-attribute");
+            if (tbody != null) {
+                const newRowId = `tr-${attributeCount}`;
+                const newRow = `
+                      <tr id="${newRowId}">
+                           <td>
+                               <input name="CreateAttribute.Attributes[${attributeCount}].IsDeleted" value="false" type="hidden" />
+                               <div class="form-group">
+                                   <input type="text" class="form-control" name="CreateAttribute.Attributes[${attributeCount}].Name">
+                                   <span class="txt-overflow"></span>
+                               </div>
+                           </td>
+                           <td>
+                               <div class="form-group" style="padding-left: 15px;">
+                                   <input type="text" class="form-control vndInput" name="CreateAttribute.Attributes[${attributeCount}].Price">
+                                   <span class="txt-overflow"></span>
+                               </div>
+                           </td>
+                           <td>
+                               <div class="form-group" style="padding-left: 15px;">
+                                       <button type="button" class="btn btn-danger" onclick="removeElementById('${newRowId}',${attributeCount})">
+                                       <i class="bi bi-x-octagon" style="color: #FFFFFF;"></i>
+                                   </button>
+                               </div>
+                           </td>
+                       </tr>
+                   `;
+                tbody.insertAdjacentHTML('beforeend', newRow);
+                attributeCount++;
+            }
+        }
+
+        function removeElementById(elementId, index) {
+            var element = document.getElementById(elementId);
+            if (element) {
+                document.querySelector(`input[name='CreateAttribute.Attributes[${index}].IsDeleted']`).value = 'true';
+                element.style.display = "none";
+            }
+        }
+    </script>
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        @if (Model.CreateProduct != null)
+        {
+            <script>
+                $(function () {
+                    displayBanner(@Html.Raw(Model.CreateProduct.IsRequiredAttribute));
+                });
+            </script>
+        }
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

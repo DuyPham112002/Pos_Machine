@@ -1,0 +1,139 @@
+﻿@using Client_ViewModel.Shift
+
+@model ShiftForManagerViewModel
+
+@* <div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px w-100"> *@
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+
+                    <!-- Input Validation Start -->
+                    <div class="pd-20 card-box mb-30 col-lg-12">
+                        <div class="clearfix">
+                            <div class="pull-left">
+                                <h4 class="text-blue h4">Thông Tin Chi Tiết</h4>
+                                <p class="mb-30">
+                                    Xem Chi Tiết Ca Làm Việc Ở Đây
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Tài Khoản</label>
+                                    <input type="text"
+                                           class="form-control" disabled value="@Model.Username" />
+                                </div>
+                                <div class="form-group">
+                                    <label>Thời Gian Bắt Đầu</label>
+                                    <input type="text"
+                                           class="form-control" disabled value="@Model.TimeStart.ToString("dd/MM/yyyy HH:mm")" />
+                                </div>
+                                @if (Model.TimeEnd == null)
+                                {
+                                    <div class="form-group">
+                                        <label>Thời Gian Kết Thúc</label>
+                                        <input type="text"
+                                               class="form-control text-primary font-weight-bold" disabled value="Chưa có" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label>Thời Gian Kết Thúc</label>
+                                        <input type="text"
+                                               class="form-control" disabled value="@Model.TimeEnd?.ToString("dd/MM/yyyy HH:mm")" />
+                                    </div>
+                                }
+
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label>Số Tiền Ban Đầu</label>
+                                    <input type="text"
+                                           class="form-control" disabled value="@Model.BeginAmount.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ" />
+                                </div>
+                                @if (Model.EndAmount == null)
+                                {
+                                    <div class="form-group">
+                                        <label>Số Tiền Kết Toán</label>
+                                        <input type="text"
+                                               class="form-control text-primary font-weight-bold" disabled value="Chưa tổng kết" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label>Số Tiền Kết Toán</label>
+                                        <input type="text"
+                                               class="form-control" disabled value="@Model.EndAmount.Value.ToString("N0", System.Globalization.CultureInfo.GetCultureInfo("de")) VNĐ" />
+                                    </div>
+                                }
+
+                                @if (Model.IsActive == false)
+                                {
+                                    <div class="form-group">
+                                        <label>Trạng Thái Ca Làm</label>
+                                        <input type="text"
+                                               class="form-control text-success font-weight-bold" disabled value="Đã kết thúc" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="form-group">
+                                        <label>Trạng Thái Ca Làm</label>
+                                        <input type="text"
+                                               class="form-control text-primary font-weight-bold" disabled value="Đang làm việc" />
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 d-flex flex-row-reverse">
+                                <div class="form-group p-2">
+                                    <a href="/Shift/Index"><button type="button" class="btn btn-secondary">Trở Về</button></a>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+<ul class="notification-list"></ul>
+
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}

@@ -1,0 +1,231 @@
+﻿@using Client_ViewModel.AttendDetailViewModel
+
+
+@model List<AttendanceDetailViewModel>
+@*  <link rel="stylesheet"
+       type="text/css"
+       href="~/src/plugins/fullcalendar/fullcalendar.css" /> *@
+<!-- Modal -->
+
+<div class="modal" id="attmodal" tabindex="-1" style="margin-top:10%">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi Tiết</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="att-detail">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Thoát</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12">
+                        <div class="title">
+                            <h4>Chấm Công</h4>
+                        </div>
+                        <nav aria-label="breadcrumb" role="navigation">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/Home/Index">Trang Chủ</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <a href="/Attendance/Index" class="text-primary">Chấm Công</a>
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="pd-20 card-box mb-30">
+                <div class="calendar-wrap ">
+                    <div id="calendar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- calendar modal -->
+<div id="modal-view-event"
+     class="modal modal-top fade calendar-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="h4">
+                    <span class="event-icon weight-400 mr-3"></span><span class="event-title"></span>
+                </h4>
+                <div class="event-body"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-primary"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="notification-list"></ul>
+
+
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1/index.global.min.js" integrity="sha256-ZztCtsADLKbUFK/X6nOYnJr0eelmV2X3dhLDB/JK6fM=" crossorigin="anonymous"></script>
+
+    @* 	<script src="vendors/scripts/calendar-setting.js"></script> *@
+
+
+    <script>
+
+
+
+        //     "use strict";
+        //     // ------------------------------------------------------- //
+        //     // Calendar
+        //     // ------------------------------------------------------ //
+
+        //     jQuery(function () {
+        //         // page is ready
+        //         jQuery("#calendar").FullCalendar({
+        //             themeSystem: "bootstrap4",
+        //             // emphasizes business hours
+        //             businessHours: false,
+        //             defaultView: "month",
+        //             // event dragging & resizing
+        //             editable: false,
+        //             handleWindowResize:true,
+        //             // header
+        //             header: {
+        //                 left: "title",
+        //                 center: "month",
+        //                 right: "today prev,next",
+        //             },
+        //             events: calendarItem,
+        //             dayClick: function () {
+        //                 jQuery("#modal-view-event-add").modal();
+        //             },
+
+        //             eventRender: function (event, element) {
+        //                 // Customize the display of the event with line breaks
+        //                 element.find('.fc-title').html(event.title + '<br/>' + "Begin:" + event.extraInfo + '<br/>' + "Close Order:" + event.endbalance + '<br/>' + "Start:" + event.timeinfoStart + '<br/>' + "End:" + event.timeinfoEnd);
+
+        //             },
+        //             eventAdd: function (event, jsEvent, view) {
+        //                 // jQuery(".event-icon").html("<i class='fa fa-" + event.icon + "'></i>");
+        //                 jQuery(".event-title").html(event.title);
+        //                 jQuery(".event-body").html(event.description);
+        //                 // element.find('.fc-title').append(" " + event.description);
+        //                 // jQuery(".eventUrl").attr("href", event.url);
+        //                 jQuery("#modal-view-event").modal();
+        //             },
+        //         });
+        //     });
+
+        // })(jQuery));
+    </script>
+
+    <script>
+        var attends = [];
+        var calendarItem = [];
+        document.addEventListener('DOMContentLoaded', function () {
+            attends = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+            attends.forEach(function (item) {
+                var attend = {
+                    title: item.Username,
+                    display: 'auto',
+                    endbalance: new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.EndBalance),
+                    // timeinfoStart: item.TimeStart,
+                    // timeinfoEnd: item.TimeEnd,
+                    // start: new Date(item.TimeStart).toISOString().split('T')[0],
+                    // end: new Date(item.TimeEnd).toISOString().split('T')[0],
+                    start: item.TimeStart,
+                    end: item.TimeEnd,
+                    className: "fc-bg-default",
+                    url: JSON.stringify(item),
+                };
+                calendarItem.push(attend);
+            });
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: calendarItem,
+                themeSystem: "bootstrap4",
+                // emphasizes business hours
+                businessHours: false,
+                defaultView: "dayGridMonth",
+                // event dragging & resizing
+                editable: false,
+                handleWindowResize: true,
+                // header
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth'
+                },
+                contentHeight: 'auto',
+                aspectRatio: 3,
+                dayMaxEvents: true, // for all non-TimeGrid views
+                views: {
+                    dayGrid: {
+                        dayMaxEvents: 3
+                    }
+                },
+                eventClick: function (info) {
+                    info.jsEvent.preventDefault(); // don't let the browser navigate
+                    var attendance = JSON.parse(info.event.url)
+                    $('#attmodal').modal('show');
+                    const options = { 
+                        timeZone: 'Asia/Ho_Chi_Minh', 
+                        year: "numeric", 
+                        month: "2-digit", 
+                        day: "2-digit",
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: false 
+                    };
+
+                    const timeStart = new Date(attendance.TimeStart).toLocaleString('vi-VN', options);
+                    const timeEnd = new Date(attendance.TimeEnd).toLocaleString('vi-VN', options);
+
+
+                    document.getElementById("att-detail").innerHTML = `
+                        <p><strong>Tài khoản:</strong> ${attendance.Username}</p>
+                        <p><strong>Bắt đầu lúc:</strong> ${timeStart}</p>
+                        <p><strong>Kết thúc lúc:</strong> ${timeEnd}</p>
+                        <p><strong>Tiền ban đầu:</strong> ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(attendance.BeginBalance)}</p>
+                        <p><strong>Tiền kết ca:</strong> ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(attendance.EndBalance)}</p>
+                    `;
+                }
+
+            });
+            calendar.render();
+           
+        });
+    </script>
+
+
+
+}
+
+
+

@@ -1,0 +1,95 @@
+﻿@using Client_ViewModel.Menu
+@model List<MenuViewModel>
+
+<style>
+    .dropdown-item i {
+        margin-right: 10px;
+    }
+
+    table.dataTable thead:nth-of-type(2) {
+        display: none;
+    }
+
+    .modal-body {
+        overflow: auto !important;
+    }
+</style>
+
+<div class="main-container">
+    <div class="pd-ltr-20 xs-pd-20-10">
+        <div class="min-height-200px">
+            <div class="mb-30">
+                <div class="pb-20">
+                    <div class="row">
+                        @{
+                            if (Model != null && Model.Count > 0)
+                            {
+                                int count = Model.Count();
+                                int page = count / 4;
+                                var list = Model.GroupBy(p => p.CategoryName);
+
+                                @foreach (var ca in list)
+                                {
+                                    <div class="col-lg-3 col-md-4 col-sm-12">
+                                        <div class="sitemap">
+                                            <h5 class="h5">@ca.Key</h5>
+                                            @{
+                                                var products = ca.GroupBy(o => o.SubCategoryName);
+                                                foreach (var sub in products)
+                                                {
+                                                    <ul>
+                                                        <li class="child">
+                                                            <h5 class="h5">@sub.Key</h5>
+                                                            <ul>
+                                                                @foreach (var product in sub)
+                                                                {
+                                                                    <li><a href="@($"/Product/Detail/{product.ProductId}")">@product.ProductName</a></li>
+                                                                }
+                                                            </ul>
+                                                        </li>
+                                                    </ul>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                }
+
+                            }
+                            else
+                            {
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="sitemap">
+                                        <h5 class="h5" style="color: #000000;">Không có bất kì sản phẩm nào tồn tại</h5>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Notify-->
+<ul class="notifications"></ul>
+<ul class="notification-list"></ul>
+
+@section Scripts {
+    @if (ViewBag.Success != null)
+    {
+        <script>
+            $(function () {
+                toastSuccess('@Html.Raw(ViewBag.Success)');
+            });
+        </script>
+    }
+
+    @if (ViewBag.Error != null)
+    {
+        <script>
+            $(function () {
+                toastError('@Html.Raw(ViewBag.Error)');
+            });
+        </script>
+    }
+}
